@@ -78,8 +78,8 @@ const ToolBarButton = ({ onClick, isActive, icon: Icon }: ToolBarIconProps) => {
     <button
       onClick={onClick}
       className={cn(
-        "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm bg-neutral-200/80 hover:bg-neutral-500/80",
-        isActive && "bg-neutral-500/80"
+        "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm  hover:bg-neutral-300/20",
+        isActive && "bg-neutral-300/20"
       )}
     >
       <Icon className="size-4" />
@@ -96,7 +96,7 @@ const TextColorButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-300/20 items-center justify-center">
           <button>A</button>
         </div>
       </DropdownMenuTrigger>
@@ -126,7 +126,7 @@ const Imagebutton=()=>{
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger className="hover:bg-neutral-300/20">
         <Image className="w-5 h-5" />
       </PopoverTrigger>
       <PopoverContent>
@@ -488,7 +488,7 @@ export const Toolbar = () => {
     ],
   ];
   return (
-    <div className="px-2.5 py-0.5 bg-[#F1F4F9] rounded-[24px] min-h-[40px] overflow-x-auto flex items-center">
+    <div className="fixed top-5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 bg-[#ebeef2] rounded-[24px] min-h-[40px] overflow-x-auto flex items-center z-10 justify-center">
       {sections.map((row, rowIndex) => (
         <div key={rowIndex} className="flex mx-2 gap-x-0.5">
           {row.map((item) => (
@@ -510,7 +510,7 @@ export const Toolbar = () => {
       <HeadingButton />
       <TextColorButton />
       <AlignmentButton />
-      <Imagebutton/>
+      <Imagebutton />
     </div>
   );
 };

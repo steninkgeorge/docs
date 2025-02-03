@@ -4,12 +4,21 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
 import {
+  ActivityIcon,
+  AlignCenterIcon,
+  AlignJustifyIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
   BoldIcon,
   ChevronDownIcon,
   HighlighterIcon,
   Icon,
+  Image,
   ItalicIcon,
+  Link,
   Link2Icon,
+  List,
+  ListOrdered,
   ListTodoIcon,
   LucideIcon,
   MessageSquareCodeIcon,
@@ -21,10 +30,13 @@ import {
   Redo2Icon,
   RemoveFormatting,
   RemoveFormattingIcon,
+  Search,
   SpellCheck,
   SpellCheckIcon,
   UnderlineIcon,
   Undo2Icon,
+  Upload,
+  
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,10 +45,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Level } from "@tiptap/extension-heading";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Highlight from "@tiptap/extension-highlight";
 import { CirclePicker, SketchPicker, type ColorResult } from "react-color";
-import { useEditor } from "@tiptap/react";
+import { isActive, useEditor } from "@tiptap/react";
+import { Dropdown } from "react-day-picker";
+import { Popover, PopoverContent } from "@/components/ui/popover";
+import { PopoverTrigger } from "@radix-ui/react-popover";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+//TODO:
+//bullet list 
+//image button
 
 interface ToolBarIconProps {
   onClick?: () => void;
@@ -74,9 +96,9 @@ const TextColorButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
-          A
-        </button>
+        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+          <button>A</button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <SketchPicker onChange={onChange} />
@@ -84,6 +106,122 @@ const TextColorButton = () => {
     </DropdownMenu>
   );
 };
+
+//image button
+//popover-> insert from computer , google search (beta), url (dialog)
+
+const Imagebutton=()=>{
+  const {editor}= useEditorStore();
+
+  const [isDialogOpen , setDialogOpen]=useState(false)
+  const [link , setLink]= useState('')
+
+  const handleInsertLink=()=>{
+      if(link){
+        editor?.chain().focus().setImage({ src: link }).run();
+      }
+      setDialogOpen(false)
+
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Image className="w-5 h-5" />
+      </PopoverTrigger>
+      <PopoverContent>
+        <div className="flex flex-col w-full">
+          <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
+            <Upload className="w-4 h-4" />
+            <p>upload from computer</p>
+          </div>
+          <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
+            <Search className="w-4 h-4" />
+            <p>search from google</p>
+          </div>
+          <div
+            onClick={() => setDialogOpen(true)}
+            className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2"
+          >
+            <Link className="w-4 h-4" />
+            <p>insert link</p>
+          </div>
+        </div>
+      </PopoverContent>
+
+      <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Insert Image Link</DialogTitle>
+            <DialogDescription>
+              Enter the image URL below to insert it.
+            </DialogDescription>
+          </DialogHeader>
+          <Input
+            type="text"
+            placeholder="Paste image link here..."
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+          />
+          <Button onClick={()=>handleInsertLink()} className="mt-2">
+            Insert
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </Popover>
+  );
+}
+
+const AlignmentButton= ()=>{
+  const {editor}= useEditorStore()
+
+  const [active , setAlignment]= useState('left')
+
+  const handleAlignment= useCallback((label: string)=>{
+    if(editor){
+        editor.chain().focus().setTextAlign(label).run();
+        setAlignment(label)
+    }
+  },[editor])
+
+  const icons = [
+    { label: "left", icon: AlignLeftIcon },
+    { label: "right", icon: AlignRightIcon },
+    { label: "center", icon: AlignCenterIcon },
+    { label: "justify", icon: AlignJustifyIcon },
+  ];  
+  
+  const activeIcon = icons.find(({ label }) => label === active)
+  const IconComponent = activeIcon?.icon || AlignLeftIcon; 
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+          <button>
+            <IconComponent className="w-4 h-4"/>
+          </button>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {icons.map(({ label, icon: Icon }) => (
+          <button
+            key={label}
+            className={cn(
+              "hover:bg-neutral-200/80 p-2 rounded-sm",
+              editor?.isActive({ textAlign: label }) && "bg-neutral-200/80"
+            )}
+            onClick={() => handleAlignment(label)}
+          >
+            <Icon className="w-4 h-4" />
+          </button>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+
 
 const HeadingButton = () => {
   const { editor } = useEditorStore();
@@ -114,7 +252,7 @@ const HeadingButton = () => {
           <ChevronDownIcon className="ml-2 size-4 shrink-0" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent >
         {heading.map(({ label, value, fontSize }) => (
           <button
             key={label}
@@ -298,8 +436,8 @@ export const Toolbar = () => {
         icon: Link2Icon,
         onClick: editor?.isActive("link")
           ? () => {
-            editor.commands.unsetMark("link"); // Ensure next text isn't linked
-          }
+              editor.commands.unsetMark("link"); // Ensure next text isn't linked
+            }
           : () => {
               if (!editor) {
                 return;
@@ -331,6 +469,22 @@ export const Toolbar = () => {
             },
         isActive: editor?.isActive("link"),
       },
+      {
+        label: "bulletList",
+        icon: List,
+        onClick: () => {
+          editor?.chain().focus().toggleBulletList().run();
+        },
+        isActive: editor?.isActive("bulletList"),
+      },
+      {
+        label: "OrderedList",
+        icon: ListOrdered,
+        onClick: () => {
+          editor?.chain().focus().toggleOrderedList().run();
+        },
+        isActive: editor?.isActive("orderedList"),
+      },
     ],
   ];
   return (
@@ -355,6 +509,8 @@ export const Toolbar = () => {
       <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300" />
       <HeadingButton />
       <TextColorButton />
+      <AlignmentButton />
+      <Imagebutton/>
     </div>
   );
 };

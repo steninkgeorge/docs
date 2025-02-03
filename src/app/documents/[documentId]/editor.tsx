@@ -18,6 +18,9 @@ import Highlight from "@tiptap/extension-highlight";
 import { useEditorStore } from "@/store/use-editor-store";
 import { Color } from "@tiptap/extension-color";
 import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
 
 
 
@@ -66,12 +69,20 @@ export const Editor = () => {
     },
     extensions: [
       StarterKit,
+      OrderedList,
       Underline,
       TaskList,
-      TextStyle,
+      TextStyle,Image.configure({allowBase64:true}),
+      BulletList.configure({
+        keepMarks:true,
+        keepAttributes: true
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
       Link.configure({
-        HTMLAttributes:{
-          class:'text-blue-500 underline cursor-pointer'
+        HTMLAttributes: {
+          class: "text-blue-500 underline cursor-pointer",
         },
         openOnClick: false,
         autolink: true,
@@ -142,8 +153,7 @@ export const Editor = () => {
             return false;
           }
         },
-      })
-      ,
+      }),
       TaskItem.configure({
         nested: true,
       }),

@@ -99,6 +99,12 @@ body {
       margin-top: 0.25em;
       margin-bottom: 0.25em;
     }
+     ul li {
+        list-style-type: circle;
+
+        ul li {
+          list-style-type: square;
+        }}
   }
 
   ol li {
@@ -107,6 +113,12 @@ body {
       margin-top: 0.25em;
       margin-bottom: 0.25em;
     }
+         ol li {
+        list-style-type: lower-alpha;
+
+        ol li {
+          list-style-type: lower-roman;
+        }}
   }
   ul[data-type="taskList"] {
     list-style: none;

@@ -18,6 +18,8 @@ import {
   Link,
   Link2Icon,
   List,
+  ListCollapse,
+  ListCollapseIcon,
   ListOrdered,
   ListTodoIcon,
   LucideIcon,
@@ -26,6 +28,9 @@ import {
   MessageSquareIcon,
   MessageSquarePlus,
   MessageSquarePlusIcon,
+  Minus,
+  MinusIcon,
+  PlusIcon,
   PrinterIcon,
   Redo2Icon,
   RemoveFormatting,
@@ -45,7 +50,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Level } from "@tiptap/extension-heading";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Highlight from "@tiptap/extension-highlight";
 import { CirclePicker, SketchPicker, type ColorResult } from "react-color";
 import { isActive, useEditor } from "@tiptap/react";
@@ -57,8 +62,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 //TODO:
-//bullet list 
-//image button
+//creative mode where the toolbar is hidden , and the user can access everything using their keyboard 
+//similar to notion , various ai tools should be there , 
+//grammar correction , sentence rewriting to content generation , summarizing
 
 interface ToolBarIconProps {
   onClick?: () => void;
@@ -86,6 +92,160 @@ const ToolBarButton = ({ onClick, isActive, icon: Icon }: ToolBarIconProps) => {
     </button>
   );
 };
+
+const FontSizeButton=()=>{
+  const {editor}= useEditorStore();
+  const defaultFontSize= "16";
+  const [input, setInput] = useState(defaultFontSize);
+  const [lastValidInput, setLastValidInput]= useState(defaultFontSize)
+  const [isEditing, setIsEditing] = useState(false);
+  const [prevSelection, setPrevSelection] = useState<any>(null);
+
+  console.log(input)
+ const  handleChange=(e: any)=>{
+      setIsEditing(true)
+      setInput(e.target.value)
+  }
+
+  const handleIncrement=()=>{
+       setInput((prev) => {
+         const newSize = Math.max(1, parseInt(prev) +1).toString();
+         return newSize;
+       });
+  }
+
+  const handleDecrement=()=>{
+     setInput((prev)=>{
+      const newSize = Math.max(1, parseInt(prev) - 1).toString();
+      return newSize;
+     })
+  }
+
+  useEffect(()=>{
+    if (!editor || isEditing) {return }
+
+    if (!isNaN(parseInt(input))) {
+      editor
+        ?.chain()
+        .focus()
+        .setFontSize(input + "px")
+        .run();
+      setLastValidInput(input);
+    }
+
+    // Handle content reset when empty
+    const handleUpdate = () => {
+      if (editor.getText() === "") {
+        editor
+          .chain()
+          .focus()
+          .setFontSize(lastValidInput + "px")
+          .run();
+      }
+    };
+
+    editor.on("update", handleUpdate);
+
+    return () => {
+      editor.off("update", handleUpdate); // Cleanup
+    };
+  },[input , editor , lastValidInput])
+
+    const handleFocus = () => {
+      if (!editor) return;
+      setPrevSelection(editor.state.selection); // Store selection before input is focused
+    };
+
+  const handleBlur = ()=>{
+        if (!editor) return;
+
+    const fontSize= parseInt(input)
+    setIsEditing(false)
+    if(!isNaN(fontSize) ||  fontSize > 1 || fontSize < 98 ){
+      editor
+        ?.chain()
+        .focus()
+        .setFontSize(fontSize.toString() + "px")
+        .run();
+
+      setLastValidInput(fontSize.toString()); 
+    }else{
+        setInput(lastValidInput); 
+    }
+     if (prevSelection) {
+       editor.commands.setTextSelection(prevSelection); // Restore selection
+     }
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-x-2 m-1">
+      <button onClick={handleDecrement}>
+        <MinusIcon className="w-4 h-4" />
+      </button>
+      
+        <input
+          className="max-w-8 h-6 border rounded-sm border-black  outline-none bg-transparent p-1 text-center items-center justify-center"
+          value={input}
+          onChange={(e)=>handleChange(e)}
+          onBlur={handleBlur}
+        ></input>
+      
+      
+      <button onClick={handleIncrement}>
+        <PlusIcon className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
+
+const LineHeightButton = () => {
+  const { editor } = useEditorStore();
+
+  const handleAlignment = useCallback(
+    (value: string) => {
+      if (editor) {
+        editor.chain().focus().setLineHeight(value).run();
+      }
+    },
+    [editor]
+  );
+
+  const lineHeightOptions = [
+    { label: "Default", value: 'normal' },
+    { label: "Single", value: '1' },
+    { label: "1.15", value: '1.15' },
+    { label: "1.5", value: '1.5' },
+    { label: "Double", value: '2' },
+  ];
+
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+          <button>
+            <ListCollapseIcon className="w-4 h-4" />
+          </button>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {lineHeightOptions.map(({ label, value }) => (
+          <button
+            key={label}
+            className={cn(
+              "hover:bg-neutral-200/80 p-2 rounded-sm",
+              editor?.getAttributes('paragraph').lineHeight === value && "bg-neutral-200/80"
+            )}
+            onClick={() => handleAlignment(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 
 const TextColorButton = () => {
   const { editor } = useEditorStore();
@@ -505,12 +665,17 @@ export const Toolbar = () => {
           />
         </div>
       ))}
+      <FontSizeButton />
+      <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300" />
+
       <FontFamilyButton />
+
       <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300" />
       <HeadingButton />
       <TextColorButton />
       <AlignmentButton />
       <Imagebutton />
+      <LineHeightButton/>
     </div>
   );
 };

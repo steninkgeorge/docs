@@ -22,12 +22,15 @@ import TextAlign from "@tiptap/extension-text-align";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 
-
+//custom extension
+import { FontSize } from "@/extensions/font-size";
+import { LineHeight } from "@/extensions/line-height";
 
 export const Editor = () => {
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
+    immediatelyRender:false, 
     onCreate({ editor }) {
       setEditor(editor);
     },
@@ -69,9 +72,11 @@ export const Editor = () => {
     },
     extensions: [
       StarterKit,
+      FontSize,
       OrderedList,
       Underline,
       TaskList,
+      LineHeight,
       TextStyle,Image.configure({allowBase64:true}),
       BulletList.configure({
         keepMarks:true,

@@ -1,5 +1,6 @@
 
 import { Editor } from "./editor";
+import { Ruler } from "./ruler";
 import { Toolbar } from "./toolbar";
 
 
@@ -13,7 +14,8 @@ const DocumentPage =async ({ params }: DocumentIdProps) => {
   return (
     <div className="min-h-screen bg-[#FAFBFD]">
       <Toolbar />
-      <div className="pt-[50px]">
+      <div className="pt-[60px]">
+        <Ruler />
         <Editor />
       </div>
     </div>

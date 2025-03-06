@@ -1,10 +1,9 @@
-'use client'
+"use client";
 
-import { useState ,useEffect} from 'react';
-import {FaCaretDown} from 'react-icons/fa'
+import { useState, useEffect } from "react";
+import { FaCaretDown } from "react-icons/fa";
 
-
-export const Ruler =()=>{
+export const Ruler = () => {
   const [leftPosition, setLeftPosition] = useState(56);
   const [rightPosition, setRightPosition] = useState(56);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
@@ -19,7 +18,7 @@ export const Ruler =()=>{
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    console.log('mouse move')
+    console.log("mouse move");
     if (isDraggingLeft || isDraggingRight) {
       const rulerContainer = document.getElementById("ruler-container");
       if (!rulerContainer) return;
@@ -64,7 +63,7 @@ export const Ruler =()=>{
   // useEffect to handle event listeners
   useEffect(() => {
     if (isDraggingLeft || isDraggingRight) {
-        console.log('dragging')
+      console.log("dragging");
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
     }
@@ -80,7 +79,7 @@ export const Ruler =()=>{
 
   return (
     <div
-      className={`h-6 flex items-end border-gray-300 border-b print:hidden ${
+      className={` h-6 flex items-end border-gray-300 border-b print:hidden ${
         isDraggingLeft || isDraggingRight ? "cursor-grabbing" : ""
       }`}
     >
@@ -134,29 +133,43 @@ export const Ruler =()=>{
       </div>
     </div>
   );
+};
+
+interface MarkerProps {
+  isLeft: boolean;
+  isDragging: boolean;
+  position: number;
+  onMouseDown: () => void;
+  onDoubleClick: () => void;
 }
 
-interface MarkerProps{
-    isLeft : boolean,
-    isDragging : boolean, 
-    position : number,
-    onMouseDown: ()=> void, 
-    onDoubleClick : ()=> void
-}
-
-const Marker= ({
-    position, isLeft, isDragging, onMouseDown, onDoubleClick   
-}: MarkerProps)=>{
-    return (
+const Marker = ({
+  position,
+  isLeft,
+  isDragging,
+  onMouseDown,
+  onDoubleClick,
+}: MarkerProps) => {
+  return (
+    <div
+      className=" absolute top-0 z-[5] w-4 cursor-ew-resize group -ml-2 "
+      style={{ [isLeft ? "left" : "right"]: `${position}px` }}
+      onMouseDown={onMouseDown}
+      onDoubleClick={onDoubleClick}
+    >
+      <FaCaretDown className=" fill-blue-500  top-0 h-full  left-1/2 transform -translate-x-1/2 " />
       <div
-        className=" absolute top-0 z-[5] w-4 cursor-ew-resize group -ml-2"
-        style={{ [isLeft ? "left" : "right"]: `${position}px` }}
-        
-        onMouseDown={onMouseDown}
-        onDoubleClick={onDoubleClick}
-        
-      >
-        <FaCaretDown className=" fill-blue-500  top-0 h-full  left-1/2 transform -translate-x-1/2" />
-      </div>
-    );
-}
+        className="absolute -translate-x-1/2 top-4 transform select-none"
+        style={{
+          height: "100vh",
+          width: "1px",
+          backgroundColor: "#3b72f6",
+          transform:'scaleX(0.5)',
+          display: isDragging? 'block': 'none',
+          userSelect:'none'
+          
+        }}
+      ></div>
+    </div>
+  );
+};

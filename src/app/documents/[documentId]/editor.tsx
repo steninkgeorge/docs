@@ -21,18 +21,39 @@ import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
+import Typography from "@tiptap/extension-typography";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 
 //custom extension
 import { FontSize } from "@/extensions/font-size";
 import { LineHeight } from "@/extensions/line-height";
+import { Ruler } from "./ruler";
 
+import javascript from "highlight.js/lib/languages/javascript";
+import typescript from "highlight.js/lib/languages/typescript";
+import html from "highlight.js/lib/languages/xml";
+import css from "highlight.js/lib/languages/css";
+import python from "highlight.js/lib/languages/python";
+
+import { all, createLowlight } from "lowlight";
+
+const lowlight = createLowlight(all);
+
+
+lowlight.register("html", html);
+lowlight.register("css", css);
+lowlight.register("js", javascript);
+lowlight.register("javascript", javascript);
+lowlight.register("ts", typescript);
+lowlight.register("typescript", typescript);
+lowlight.register("python", python);
 
 
 export const Editor = () => {
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
-    immediatelyRender:false, 
+    immediatelyRender: false,
     onCreate({ editor }) {
       setEditor(editor);
     },
@@ -72,6 +93,7 @@ export const Editor = () => {
           "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pb-10 pr-14 cursor-text",
       },
     },
+
     extensions: [
       StarterKit,
       FontSize,
@@ -79,10 +101,14 @@ export const Editor = () => {
       Underline,
       TaskList,
       LineHeight,
-      TextStyle,Image.configure({allowBase64:true}),
+      TextStyle,
+      CodeBlockLowlight.configure({
+        lowlight,
+      }),
+      Image.configure({ allowBase64: true }),
       BulletList.configure({
-        keepMarks:true,
-        keepAttributes: true
+        keepMarks: true,
+        keepAttributes: true,
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
@@ -177,12 +203,30 @@ export const Editor = () => {
       ImageResize,
       FontFamily,
       Color,
+      Typography,
     ],
-    content: `        
+    content: `  <p>
+          That's a boring paragraph followed by a fenced code block:
+        </p>
+        <pre><code class="language-javascript">for (var i=1; i <= 20; i++)
+{
+  if (i % 15 == 0)
+    console.log("FizzBuzz");
+  else if (i % 3 == 0)
+    console.log("Fizz");
+  else if (i % 5 == 0)
+    console.log("Buzz");
+  else
+    console.log(i);
+}</code></pre>
+        <p>
+          Press Command/Ctrl + Enter to leave the fenced code block and continue typing in boring paragraphs.
+        </p>     
 `,
   });
   return (
-    <div className="size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible ">
+    <div className="pt-10 size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible ">
+
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:min-w-0">
         <EditorContent editor={editor} />
       </div>

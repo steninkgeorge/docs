@@ -648,7 +648,7 @@ export const Toolbar = () => {
     ],
   ];
   return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 bg-[#ebeef2] rounded-[24px] min-h-[40px] overflow-x-auto flex items-center z-10 justify-center">
+    <div className=" top-5  px-2.5 py-0.5 rounded-[24px] min-h-[40px] overflow-x-auto flex items-center justify-center">
       {sections.map((row, rowIndex) => (
         <div key={rowIndex} className="flex mx-2 gap-x-0.5">
           {row.map((item) => (
@@ -676,6 +676,7 @@ export const Toolbar = () => {
       <AlignmentButton />
       <Imagebutton />
       <LineHeightButton/>
+      
     </div>
   );
 };

@@ -79,7 +79,7 @@ export const Ruler = () => {
 
   return (
     <div
-      className={` h-6 flex items-end border-gray-300 border-b print:hidden ${
+      className={`  h-6 flex items-end border-gray-300 border-b print:hidden ${
         isDraggingLeft || isDraggingRight ? "cursor-grabbing" : ""
       }`}
     >

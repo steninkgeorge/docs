@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { DocumentInput } from "./document-input";
+import DownloadUtils from "@/lib/download-utils";
 import {
   Menubar,
   MenubarContent,
@@ -15,14 +16,100 @@ import {
   MenubarSub,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { BoldIcon, CodeIcon, FileIcon, FileJson, FilePen, FilePenIcon, FilePlus2Icon, GlobeIcon, Italic, ItalicIcon, PrinterIcon, RedoIcon, Strikethrough, StrikethroughIcon, TableIcon, TextIcon, TrashIcon, UnderlineIcon, UndoIcon } from "lucide-react";
-import { BsFilePdf } from "react-icons/bs";
+import {
+  BoldIcon,
+  CodeIcon,
+  FileIcon,
+  FileJson,
+  FilePen,
+  FilePenIcon,
+  FilePlus2Icon,
+  GlobeIcon,
+  Italic,
+  ItalicIcon,
+  PrinterIcon,
+  RedoIcon,
+  RemoveFormatting,
+  RemoveFormattingIcon,
+  Strikethrough,
+  StrikethroughIcon,
+  TableIcon,
+  TextIcon,
+  TrashIcon,
+  UnderlineIcon,
+  UndoIcon,
+} from "lucide-react";
+import { BsFilePdf, BsMarkdown } from "react-icons/bs";
 import { useEditorStore } from "@/store/use-editor-store";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import titleStore from "@/store/title-store";
 
 export const Navbar = () => {
 
-  const {editor}=useEditorStore()
+
+  const { editor } = useEditorStore();
+  const {title , setTitle} = titleStore()
+    const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const [input , setInput] = useState(title)
+  const insertToTable=({row, col}: {row: number, col: number})=>{
+    editor?.chain().focus().insertTable({rows: row,cols:col}).run()
+  }
+
+    const handleOpenRenameDialog : ()=> void= () => {
+      setTitle(title || "");
+      setIsRenameDialogOpen(true);
+    };
+
+
+  const handleRename = () => {
+    if (input.trim()) {
+      setTitle(input);
+      setIsRenameDialogOpen(false);
+    }
+  };
+
+
+  const handleDownload = async (type: string) => {
+    if (!editor) return; // Ensure the editor is initialized
+    const title = "MyDocument";
+
+    switch (type) {
+      case "pdf":
+        await DownloadUtils.downloadAsPDF(editor, title);
+        break;
+      case "docx":
+        await DownloadUtils.downloadAsDocx(editor, title);
+        break;
+      case "md":
+        await DownloadUtils.downloadAsMarkdown(editor, title);
+        break;
+      case "json":
+        DownloadUtils.downloadAsJson(editor, title);
+        break;
+      case "html":
+        DownloadUtils.downloadHTML(editor, title);
+        break;
+      default:
+        console.error("Unsupported file type");
+    }
+  };
+
+
+  
+
   return (
     <nav className="flex items-center justify-between">
       <div className="flex items-center gap-2">
@@ -46,21 +133,25 @@ export const Navbar = () => {
                       save
                     </MenubarSubTrigger>
                     <MenubarSubContent>
-                      <MenubarItem>
+                      <MenubarItem onClick={() => handleDownload("json")}>
                         <FileJson className="mr-2 size-4" />
                         json
                       </MenubarItem>
-                      <MenubarItem>
+                      <MenubarItem onClick={() => handleDownload("pdf")}>
                         <BsFilePdf className="mr-2 size-4" />
                         pdf
                       </MenubarItem>
-                      <MenubarItem>
+                      <MenubarItem onClick={() => handleDownload("html")}>
                         <GlobeIcon className="mr-2 size-4" />
                         HTML
                       </MenubarItem>
-                      <MenubarItem>
+                      <MenubarItem onClick={() => handleDownload("docx")}>
                         <FileIcon className="mr-2 size-4" />
-                        Text
+                        docx
+                      </MenubarItem>
+                      <MenubarItem onClick={() => handleDownload("md")}>
+                        <BsMarkdown className="mr-2 size-4" />
+                        md
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
@@ -69,10 +160,12 @@ export const Navbar = () => {
                     New Document <MenubarShortcut>⌘N</MenubarShortcut>
                   </MenubarItem>
                   <MenubarSeparator />
-                  <MenubarItem>
+
+                  <MenubarItem onSelect={handleOpenRenameDialog}>
                     <FilePenIcon className="mr-2 size-4" />
-                    Rename <MenubarShortcut>⌘R</MenubarShortcut>
+                    Rename
                   </MenubarItem>
+
                   <MenubarItem>
                     <TrashIcon className="mr-2 size-4" />
                     Remove <MenubarShortcut>⌘D</MenubarShortcut>
@@ -91,13 +184,17 @@ export const Navbar = () => {
                   Edit
                 </MenubarTrigger>
                 <MenubarContent>
-                  <MenubarItem>
+                  <MenubarItem
+                    onClick={() => editor?.chain().focus().undo().run()}
+                  >
                     <UndoIcon className="mr-2 size-4" />
                     Undo <MenubarShortcut>⌘Z</MenubarShortcut>
                   </MenubarItem>
-                  <MenubarItem>
+                  <MenubarItem
+                    onClick={() => editor?.chain().focus().redo().run()}
+                  >
                     <RedoIcon className="mr-2 size-4" />
-                    Redo <MenubarShortcut>⌘X</MenubarShortcut>
+                    Redo <MenubarShortcut>⌘Y</MenubarShortcut>
                   </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>
@@ -113,10 +210,26 @@ export const Navbar = () => {
                       Table
                     </MenubarSubTrigger>
                     <MenubarSubContent>
-                      <MenubarItem>1x1</MenubarItem>
-                      <MenubarItem>2x2</MenubarItem>
-                      <MenubarItem>3x3</MenubarItem>
-                      <MenubarItem>4x4</MenubarItem>
+                      <MenubarItem
+                        onClick={() => insertToTable({ row: 1, col: 1 })}
+                      >
+                        1x1
+                      </MenubarItem>
+                      <MenubarItem
+                        onClick={() => insertToTable({ row: 2, col: 2 })}
+                      >
+                        2x2
+                      </MenubarItem>
+                      <MenubarItem
+                        onClick={() => insertToTable({ row: 3, col: 3 })}
+                      >
+                        3x3
+                      </MenubarItem>
+                      <MenubarItem
+                        onClick={() => insertToTable({ row: 4, col: 4 })}
+                      >
+                        4x4
+                      </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
                   <MenubarItem
@@ -156,19 +269,69 @@ export const Navbar = () => {
                       </MenubarItem>
                       <MenubarItem>
                         <StrikethroughIcon className="mr-2 size-4" />
-                        StrikeThrough{" "}
-                        <MenubarShortcut className="p-1">⌘S</MenubarShortcut>
+                        StrikeThrough &nbsp;
+                        <MenubarShortcut>⌘S</MenubarShortcut>
                       </MenubarItem>
                       <MenubarSeparator />
                     </MenubarSubContent>
                   </MenubarSub>
-                  <MenubarSeparator />
+                  <MenubarItem
+                    onClick={() =>
+                      editor?.chain().focus().unsetAllMarks().run()
+                    }
+                  >
+                    <RemoveFormattingIcon className="mr-2 size-4" />
+                    Clear Formatting
+                  </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
           </div>
         </div>
       </div>
+      <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Rename Document</DialogTitle>
+            <DialogDescription>
+              Enter a new name for your document.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="name"
+                className="col-span-3"
+                value={input}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setInput(e.target.value);
+                }}
+                placeholder={"Give a title"}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleRename();
+                }}
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setIsRenameDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleRename}>
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };

@@ -79,9 +79,7 @@ export const Ruler = () => {
 
   return (
     <div
-      className={`  h-6 flex items-end border-gray-300 border-b print:hidden ${
-        isDraggingLeft || isDraggingRight ? "cursor-grabbing" : ""
-      }`}
+      className={`  h-6 flex items-end border-gray-300 border-b print:hidden `}
     >
       <div
         id="ruler-container"
@@ -165,7 +163,7 @@ const Marker = ({
           width: "1px",
           backgroundColor: "#3b72f6",
           transform:'scaleX(0.5)',
-          display: isDragging? 'block': 'none',
+          display: isDragging? 'inline-block': 'none',
           userSelect:'none'
           
         }}

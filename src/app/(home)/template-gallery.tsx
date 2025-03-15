@@ -7,15 +7,24 @@ import { templates } from "@/constants/template";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 
 export const TemplateGallery=()=>{
     const [isCreating , setIsCreating]= useState(false)
-  const router = useRouter();
+    
+    const router = useRouter();
+    const create= useMutation(api.document.create)
 
-    const handleClick=()=>{
-        setIsCreating(true)
-        router.push('/documents/123')
+
+
+    const handleClick=({title , initialContent}:{title: string , initialContent: string})=>{
+        
+      setIsCreating(true)
+        create({title:title,  initialContent: initialContent}).then((documentId)=>{
+          router.push(`/documents/${documentId}`)
+        }).finally(()=>setIsCreating(false))
         
     }
 
@@ -33,11 +42,18 @@ export const TemplateGallery=()=>{
               {templates.map(({ id, label, image }) => (
                 <CarouselItem
                   key={id}
-                  className="md:basis-1/2 lg:basis-1/3 xl:basis-1/5 2xl:basis-1/6"
+                  className="w-full sm:basis-1/2 md:basis-1/4 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
                 >
-                  <div className={cn("p-1 flex flex-col" , isCreating && 'pointer-events-none opacity-50')}>
+                  <div
+                    className={cn(
+                      "p-1 flex flex-col",
+                      isCreating && "pointer-events-none opacity-50"
+                    )}
+                  >
                     <Card
-                      onClick={handleClick}
+                      onClick={() =>
+                        handleClick({ title: label, initialContent: "" })
+                      }
                       className="border border-transparent hover:border-blue-500 transition-colors cursor-pointer"
                     >
                       <CardContent className="flex aspect-[3/4] items-center justify-center p-6">

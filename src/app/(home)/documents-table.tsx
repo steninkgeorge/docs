@@ -16,6 +16,7 @@ import {
   Building2Icon,
   BuildingIcon,
   CircleUserIcon,
+  LoaderIcon,
   MoreVertical,
   PersonStandingIcon,
 } from "lucide-react";
@@ -33,35 +34,60 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/navigation";
 import { DocumentsRow } from "./document-row";
+import { useEffect, useRef } from "react";
 
 
 interface DocumentsTableProps{
     documents : Doc<'documents'>[] | undefined, 
+    isLoading: boolean, 
     status: PaginationStatus,
     loadMore: (numItems: number)=> void
 }
 
 
-export const DocumentsTable = ({documents, status, loadMore}: DocumentsTableProps) => {
+export const DocumentsTable = ({documents,isLoading,  status, loadMore}: DocumentsTableProps) => {
      
     const { user } = useUser();
     const router = useRouter();
+    const loaderRef= useRef(null)
+    
     const handleClick = (docId: string) => {
        router.push(`/documents/${docId}`);
      };
+
+
+    useEffect(()=>{
+
+        const observer= new IntersectionObserver((entries)=>{
+            const [entry]= entries
+            if (status==='CanLoadMore' && entry.isIntersecting ){
+                loadMore(9)
+            }
+        }, {threshold: 0.5})
+
+        const currentLoaderRef = loaderRef.current
+         if (currentLoaderRef) {
+           observer.observe(currentLoaderRef);
+         }
+
+           return () => {
+             if (currentLoaderRef) {
+               observer.unobserve(currentLoaderRef);
+             }
+           };
+    } , [status , loadMore, isLoading])
        
   return (
-    <div className="max-w-screen-xl mx-auto px-14 py-6 flex flex-col gap-5">
+    <div className="max-w-screen-xl mx-auto px-14 py-6 flex flex-col gap-5 h-full">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead>Name</TableHead>
-
             <TableHead>Shared</TableHead>
             <TableHead>Created at</TableHead>
           </TableRow>
         </TableHeader>
-         {documents === undefined ? (
+        {documents === undefined ? (
           <TableBody>
             <TableRow>
               <TableCell colSpan={3} className="text-center py-8">
@@ -75,9 +101,19 @@ export const DocumentsTable = ({documents, status, loadMore}: DocumentsTableProp
               <TableCell>No document available, Try creating One</TableCell>
             </TableRow>
           </TableBody>
-        ):(<DocumentsRow documents={documents}/>) }
-        
+        ) : (
+          <DocumentsRow documents={documents} />
+        )}
       </Table>
+
+      {status === "CanLoadMore" &&
+        (isLoading ? (
+          <div className="flex justify-center">
+            <LoaderIcon className="size-6 text-muted-foreground animate-spin" />
+          </div>
+        ) : (
+          <div ref={loaderRef} className="h-8" />
+        ))}
     </div>
   );
 };

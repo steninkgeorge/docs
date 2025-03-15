@@ -384,10 +384,12 @@ const AlignmentButton= ()=>{
 
 
 const HeadingButton = () => {
+
+
   const { editor } = useEditorStore();
 
   const heading = [
-    { label: "Normal Text", value: 0, fontSize: "16px" },
+    { label: "Normal", value: 0, fontSize: "16px" },
     { label: "Heading 1", value: 1, fontSize: "32px" },
     { label: "Heading 2", value: 2, fontSize: "24px" },
     { label: "Heading 3", value: 3, fontSize: "20px" },
@@ -401,15 +403,15 @@ const HeadingButton = () => {
         return `heading ${i}`;
       }
     }
-    return "Normal Text";
+    return "Normal";
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="h-7 min-w-7 text-sm flex items-center p-2 rounded-sm hover:bg-neutral-200/80">
-          <span className="truncate">{getButtonLabel()}</span>
-          <ChevronDownIcon className="ml-2 size-4 shrink-0" />
+        <button className="h-7 w-28 text-sm flex items-center p-2 rounded-sm hover:bg-neutral-200/80 flex-shrink-0">
+          <span className="truncate flex-1">{getButtonLabel()}</span>
+          <ChevronDownIcon className=" ml-2 size-4 " />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent >

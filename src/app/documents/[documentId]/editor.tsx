@@ -36,6 +36,12 @@ import css from "highlight.js/lib/languages/css";
 import python from "highlight.js/lib/languages/python";
 
 import { all, createLowlight } from "lowlight";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
+import { useEffect, useRef } from "react";
+import titleStore from "@/store/title-store";
+
 
 const lowlight = createLowlight(all);
 
@@ -49,17 +55,45 @@ lowlight.register("typescript", typescript);
 lowlight.register("python", python);
 
 
-export const Editor = () => {
+export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
   const { setEditor } = useEditorStore();
+  const {setTitle}=titleStore()
+const storageKey = `tiptap-content-${documentId}`;
+
+  const update = useMutation(api.document.updateDocument);
+  const document = useQuery(api.document.getDocument, { id: documentId });
+  
+  if (document?.initialContent) {
+    console.log(JSON.parse(document.initialContent));
+  }
 
   const editor = useEditor({
     immediatelyRender: false,
     onCreate({ editor }) {
       setEditor(editor);
+      const savedContent = localStorage.getItem(storageKey);
+
+      if (savedContent) {
+        try {
+          editor.commands.setContent(JSON.parse(savedContent));
+        } catch (error) {
+          console.error("Failed to parse saved content:", error);
+        }
+      } else if (document?.initialContent) {
+        // Fall back to document content if no saved content
+       
+          editor.commands.setContent(JSON.parse(document.initialContent));
+        
+      }
+      
     },
     onUpdate({ editor }) {
       // The content has changed.
       setEditor(editor);
+      
+      const json = editor.getJSON();
+      localStorage.setItem(storageKey, JSON.stringify(json));
+      update({ id: documentId, initialContent: JSON.stringify(json) });
     },
     onSelectionUpdate({ editor }) {
       // The selection has changed.
@@ -205,28 +239,30 @@ export const Editor = () => {
       Color,
       Typography,
     ],
-    content: `  <p>
-          That's a boring paragraph followed by a fenced code block:
-        </p>
-        <pre><code class="language-javascript">for (var i=1; i <= 20; i++)
-{
-  if (i % 15 == 0)
-    console.log("FizzBuzz");
-  else if (i % 3 == 0)
-    console.log("Fizz");
-  else if (i % 5 == 0)
-    console.log("Buzz");
-  else
-    console.log(i);
-}</code></pre>
-        <p>
-          Press Command/Ctrl + Enter to leave the fenced code block and continue typing in boring paragraphs.
-        </p>     
-`,
+    content: "",
   });
+
+   useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (editor) {
+        const json = editor.getJSON();
+        localStorage.setItem(storageKey, JSON.stringify(json));
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [editor, storageKey]);
+
+
+
+
+
   return (
     <div className="pt-10 size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible ">
-
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:min-w-0">
         <EditorContent editor={editor} />
       </div>

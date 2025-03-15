@@ -38,7 +38,7 @@ export const SearchInput = () => {
             className="md:text-base px-14 w-full  rounded-full focus-visible:ring-0 focus:bg-white bg-neutral-100"
           />
           <Button
-            className="absolute left-3 top-1/2 -translate-y-1/2"
+            className="absolute hover:bg-transparent left-3 top-1/2 -translate-y-1/2"
             type="submit"
             variant={"ghost"}
             size={"icon"}

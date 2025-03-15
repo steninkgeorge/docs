@@ -44,9 +44,8 @@ const Home = () => {
   const { user } = useUser();
       const router = useRouter();
 
-  const {results , status , loadMore} = usePaginatedQuery(api.document.get, {}, {initialNumItems: 5});
+  const {results ,isLoading,  status , loadMore} = usePaginatedQuery(api.document.get, {}, {initialNumItems: 8});
   const document =results 
-  const isLoading = status === "LoadingMore" || status === "LoadingFirstPage";
 
   const handleClick=(docId: string)=>{
     router.push(`/documents/${docId}`)
@@ -59,12 +58,14 @@ const Home = () => {
       </div>
       <div className="mt-16">
         <TemplateGallery />
+
         <DocumentsTable
           documents={results}
+          isLoading={isLoading}
           status={status}
           loadMore={loadMore}
         />
-        ;
+        
       </div>
     </div>
   );

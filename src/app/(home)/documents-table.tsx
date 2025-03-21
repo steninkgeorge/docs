@@ -47,7 +47,6 @@ interface DocumentsTableProps{
 
 export const DocumentsTable = ({documents,isLoading,  status, loadMore}: DocumentsTableProps) => {
      
-    const { user } = useUser();
     const router = useRouter();
     const loaderRef= useRef(null)
     
@@ -87,11 +86,16 @@ export const DocumentsTable = ({documents,isLoading,  status, loadMore}: Documen
             <TableHead>Created at</TableHead>
           </TableRow>
         </TableHeader>
-        {documents === undefined ? (
+        {documents === undefined || isLoading ? (
           <TableBody>
             <TableRow>
-              <TableCell colSpan={3} className="text-center py-8">
-                <FullScreenLoader label="loading" />
+              <TableCell colSpan={4} className="text-center h-24">
+                <div className="flex flex-col items-center justify-center h-full gap-2">
+                  <LoaderIcon className="size-6 text-muted-foreground animate-spin" />
+                  <span className="text-sm text-muted-foreground">
+                    Loading...
+                  </span>
+                </div>
               </TableCell>
             </TableRow>
           </TableBody>

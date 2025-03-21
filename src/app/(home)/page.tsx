@@ -30,6 +30,8 @@ import { stat } from "fs";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 import { Button } from "@/components/ui/button";
 import { DocumentsTable } from "./documents-table";
+import { v } from "convex/values";
+import { useSearchParam } from "@/hooks/use-search-param";
 
 
 //prop -> document , title , shared(user) , created_at    3dot-> rename , remove and open in new tab
@@ -43,9 +45,9 @@ import { DocumentsTable } from "./documents-table";
 const Home = () => {
   const { user } = useUser();
       const router = useRouter();
+  const [search]=useSearchParam('search')
 
-  const {results ,isLoading,  status , loadMore} = usePaginatedQuery(api.document.get, {}, {initialNumItems: 8});
-  const document =results 
+  const {results ,isLoading,  status , loadMore} = usePaginatedQuery(api.document.get,  {search}, {initialNumItems: 8});
 
   const handleClick=(docId: string)=>{
     router.push(`/documents/${docId}`)

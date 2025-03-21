@@ -54,37 +54,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import titleStore from "@/store/title-store";
+import { RenameInputDialog } from "@/components/rename-alert-component";
+import { Id } from "../../../../convex/_generated/dataModel";
+import { title } from "process";
 
-export const Navbar = () => {
+export const Navbar = ({docId }: any) => {
 
 
   const { editor } = useEditorStore();
-  const {title , setTitle} = titleStore()
-    const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const { title , setTitle} = titleStore()
+  
   const [input , setInput] = useState(title)
+
   const insertToTable=({row, col}: {row: number, col: number})=>{
     editor?.chain().focus().insertTable({rows: row,cols:col}).run()
   }
 
-    const handleOpenRenameDialog : ()=> void= () => {
-      setTitle(title || "");
-      setIsRenameDialogOpen(true);
-    };
-
-
-  const handleRename = () => {
-    if (input.trim()) {
-      setTitle(input);
-      setIsRenameDialogOpen(false);
-    }
-  };
-
 
   const handleDownload = async (type: string) => {
     if (!editor) return; // Ensure the editor is initialized
-    const title = "MyDocument";
+    const title = 'mydocument'
 
     switch (type) {
       case "pdf":
@@ -118,7 +109,7 @@ export const Navbar = () => {
         </Link>
 
         <div className="flex flex-col">
-          <DocumentInput />
+          <DocumentInput docId={docId} />
           <div className="flex ">
             <Menubar className="p-0 h-auto bg-transparent shadow-none border-none">
               <MenubarMenu>
@@ -126,7 +117,7 @@ export const Navbar = () => {
                   File
                 </MenubarTrigger>
 
-                <MenubarContent className="print:hidden  ">
+                <MenubarContent className="print:hidden  " >
                   <MenubarSub>
                     <MenubarSubTrigger>
                       <FileIcon className="size-4 mr-2" />
@@ -161,10 +152,15 @@ export const Navbar = () => {
                   </MenubarItem>
                   <MenubarSeparator />
 
-                  <MenubarItem onSelect={handleOpenRenameDialog}>
-                    <FilePenIcon className="mr-2 size-4" />
-                    Rename
-                  </MenubarItem>
+                  <RenameInputDialog id={docId}>
+                    <MenubarItem
+                    onSelect={(e)=>e.preventDefault()}
+                      onClick={(e)=>e.stopPropagation()}
+                    >
+                      <FilePenIcon className="mr-2 size-4" />
+                      Rename
+                    </MenubarItem>
+                  </RenameInputDialog>
 
                   <MenubarItem>
                     <TrashIcon className="mr-2 size-4" />
@@ -289,49 +285,6 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-      <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Rename Document</DialogTitle>
-            <DialogDescription>
-              Enter a new name for your document.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                className="col-span-3"
-                value={input}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setInput(e.target.value);
-                }}
-                placeholder={"Give a title"}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleRename();
-                }}
-                autoFocus
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setIsRenameDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="button" onClick={handleRename}>
-              Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </nav>
   );
 };

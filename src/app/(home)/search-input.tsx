@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { useSearchParam } from "@/hooks/use-search-param";
 import { SearchIcon, XIcon } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { query } from "../../../convex/_generated/server";
+import { api } from "../../../convex/_generated/api";
+import { usePaginatedQuery } from "convex/react";
 
 export const SearchInput = () => {
 
@@ -12,25 +15,28 @@ export const SearchInput = () => {
     const [search , setSearch ]= useSearchParam('search')
     const [value , setValue ]=useState(search)
 
+
+     useEffect(() => {
+       // You can add debounce here if needed
+       setSearch(value);
+     }, [value, setSearch]);
+  
+     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value)
     }
 
     const handleClear = (e: any)=>{
         setValue('')
-        setSearch("")
+        
         inputref.current?.blur()
     }
 
-    const handleSubmit= (e: React.FormEvent<HTMLFormElement>)=>{
-        e.preventDefault()
-        setSearch(value)
-        inputref.current?.blur()    
-    }
+    
 
     return (
       <div className="flex-1 flex items-center justify-center">
-        <form className="max-w-[720px] relative w-full" onSubmit={handleSubmit}>
+        <form className="max-w-[720px] relative w-full" >
           <Input
           value={value}
             onChange={handleChange}

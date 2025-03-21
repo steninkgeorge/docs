@@ -19,6 +19,7 @@ import {
   CircleUserIcon,
   DeleteIcon,
   MoreVertical,
+  PenIcon,
   PersonStandingIcon,
 } from "lucide-react";
 import {
@@ -50,6 +51,10 @@ import { FaDrumSteelpan, FaTrash } from "react-icons/fa";
 
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { RenameInputDialog } from "@/components/rename-alert-component";
+import { RemoveDocumentDialog } from "@/components/remove-alert-component";
+import titleStore from "@/store/title-store";
+
 
 interface DocumentsRowProps{
     documents: Doc<'documents'>[]
@@ -58,32 +63,26 @@ interface DocumentsRowProps{
 export const DocumentsRow= ({documents}:DocumentsRowProps)=>{
       const { user } = useUser();
       const router = useRouter();
-      const handleClick = (docId: string) => {
+      const {setTitle}= titleStore()
+
+      const handleClick = (docId: string , index : number) => {
         router.push(`/documents/${docId}`);
+        setTitle(documents[index].title)
       };
-  const deleteDocument = useMutation(api.document.deleteDocument);
 
       const handleOpenNewTab=(docId: string, e: any)=>{
         e.stopPropagation()
         window.open(`/documents/${docId}`, "_blank", "noopener,noreferrer");
       }
 
-      const handleRemoveById= async(docId: Id<'documents'>, e: any)=>{
-        e.stopPropagation()
-          try{
-            await deleteDocument({id: docId})
-          }catch(error){
-            console.log( `Error:${error}`)
-          }
-      }
-
+    
     return (
       <TableBody>
-        {documents.map((doc) => (
+        {documents.map((doc, index) => (
           <TableRow
             key={doc._id}
             className="cursor-pointer"
-            onClick={() => handleClick(doc._id)}
+            onClick={() => handleClick(doc._id, index)}
           >
             <TableCell className="flex gap-2 items-center">
               <SiGoogledocs className="size-5 text-blue-500" />
@@ -92,8 +91,8 @@ export const DocumentsRow= ({documents}:DocumentsRowProps)=>{
 
             <TableCell className="text-sm  text-muted-foreground">
               {doc.organizationId ? (
-                <div className="flex">
-                  <Building2Icon className="w-4 h-4 text-muted" />{" "}
+                <div className="flex gap-x-2 items-center -translate-x-[18px]">
+                  <Building2Icon className="w-4 h-4 text-muted-foreground" />{" "}
                   <p>Organization</p>
                 </div>
               ) : (
@@ -125,10 +124,27 @@ export const DocumentsRow= ({documents}:DocumentsRowProps)=>{
                     <BsBoxArrowUpRight className="size-6" />
                     Open in new tab
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={(e)=>handleRemoveById(doc._id, e)} className="gap-x-2">
-                    <BsTrash3 className="size-6 " />
-                    Remove
-                  </DropdownMenuItem>
+                  <RemoveDocumentDialog document={doc}>
+                    <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      onClick={(e) => e.stopPropagation()}
+                      className="gap-x-2"
+                    >
+                      <BsTrash3 className="size-6 " />
+                      Remove
+                    </DropdownMenuItem>
+                  </RemoveDocumentDialog>
+
+                  <RenameInputDialog id={doc._id}>
+                    <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      onClick={(e) => e.stopPropagation()}
+                      className="gap-x-2"
+                    >
+                      <PenIcon className="size-6 " />
+                      Rename
+                    </DropdownMenuItem>
+                  </RenameInputDialog>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

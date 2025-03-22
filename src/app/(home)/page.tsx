@@ -48,7 +48,6 @@ const Home = () => {
   const [search]=useSearchParam('search')
 
   const {results ,isLoading,  status , loadMore} = usePaginatedQuery(api.document.get,  {search}, {initialNumItems: 8});
-
   const handleClick=(docId: string)=>{
     router.push(`/documents/${docId}`)
   }

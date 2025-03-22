@@ -21,6 +21,7 @@ const DocumentPage =async ({ params }: DocumentIdProps) => {
 
   
   return (
+        <Room >
     <div className="min-h-screen bg-[#FAFBFD]">
       <div className="fixed flex flex-col bg-[#FAFBFD] px-4 pt-2 gap-y-2 top-0  left-0 right-0 z-10 print:hidden">
         <Navbar docId={documentId} />
@@ -28,11 +29,10 @@ const DocumentPage =async ({ params }: DocumentIdProps) => {
         <Ruler />
       </div>
       <div className=" pt-[112px] print:hidden">
-        <Room>
           <Editor documentId={documentId} />
-        </Room>
       </div>
     </div>
+        </Room>
   );
 };
 

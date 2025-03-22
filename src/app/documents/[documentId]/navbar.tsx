@@ -59,6 +59,7 @@ import titleStore from "@/store/title-store";
 import { RenameInputDialog } from "@/components/rename-alert-component";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { title } from "process";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 
 export const Navbar = ({docId }: any) => {
 
@@ -117,7 +118,7 @@ export const Navbar = ({docId }: any) => {
                   File
                 </MenubarTrigger>
 
-                <MenubarContent className="print:hidden  " >
+                <MenubarContent className="print:hidden  ">
                   <MenubarSub>
                     <MenubarSubTrigger>
                       <FileIcon className="size-4 mr-2" />
@@ -154,8 +155,8 @@ export const Navbar = ({docId }: any) => {
 
                   <RenameInputDialog id={docId}>
                     <MenubarItem
-                    onSelect={(e)=>e.preventDefault()}
-                      onClick={(e)=>e.stopPropagation()}
+                      onSelect={(e) => e.preventDefault()}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <FilePenIcon className="mr-2 size-4" />
                       Rename
@@ -284,6 +285,15 @@ export const Navbar = ({docId }: any) => {
             </Menubar>
           </div>
         </div>
+      </div>
+      <div className="flex gap-3 pl-4 items-center">
+        <OrganizationSwitcher
+          afterCreateOrganizationUrl={"/"}
+          afterLeaveOrganizationUrl="/"
+          afterSelectOrganizationUrl={"/"}
+          afterSelectPersonalUrl={"/"}
+        />
+        <UserButton />
       </div>
     </nav>
   );

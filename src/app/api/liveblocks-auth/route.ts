@@ -48,12 +48,13 @@ if(!isOwner && !isOrganizationMember){
   // Start an auth session inside your endpoint
   const session = liveblocks.prepareSession(
     user.id,
-    { userInfo: {
-        name:user.fullName ?? 'Anonymous', 
-        avatar: user.imageUrl
-    } } // Optional
+    {
+      userInfo: {
+        name: user.fullName ?? user.primaryEmailAddress ?? "Anonymous",
+        avatar: user.imageUrl,
+      },
+    } // Optional
   );
-
   session.allow(room , session.FULL_ACCESS);
 
   // Authorize the user and return the result

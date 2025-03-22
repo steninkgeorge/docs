@@ -62,11 +62,8 @@ lowlight.register("python", python);
 
 export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
   const { setEditor } = useEditorStore();
-  const {setTitle}=titleStore()
 
-const storageKey = `tiptap-content-${documentId}`;
 
-  const update = useMutation(api.document.updateDocument);
   const document = useQuery(api.document.getDocument, { id: documentId });
 
   if (document?.initialContent) {

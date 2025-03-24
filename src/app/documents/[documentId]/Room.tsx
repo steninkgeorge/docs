@@ -7,9 +7,10 @@ import {
   ClientSideSuspense,
 } from "@liveblocks/react/suspense";
 import { useParams } from "next/navigation";
-import { getUsers } from "./action";
+import { getDocuments, getUsers } from "./action";
 import { toast } from "sonner";
 import { FullScreenLoader } from "@/components/full-screen-loader";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 type User={
 id: string , name : string , avatar: string
@@ -34,7 +35,17 @@ useEffect(()=>{
 
   return (
     <LiveblocksProvider
-      authEndpoint="/api/liveblocks-auth"
+    authEndpoint={async () => {
+      const room = params.documentId as string;
+        const response = await fetch("/api/liveblocks-auth", {
+          method: "POST",
+
+        
+          body: JSON.stringify({room}),
+        });
+
+        return await response.json();
+      }}
       throttle={16}
       resolveUsers={async ({ userIds }) => {
         
@@ -43,6 +54,14 @@ useEffect(()=>{
             user.id=== userId
           ) ?? undefined
         ) 
+      }}
+      resolveRoomsInfo={async ({ roomIds }) => {
+        const documentsData = await getDocuments(roomIds as Id<"documents">[]);
+
+        return documentsData.map((documentData) => ({
+          name: documentData.name,
+          id:documentData.id
+        }));
       }}
 
       resolveMentionSuggestions={async ({ text }) => {

@@ -50,7 +50,7 @@ if(!isOwner && !isOrganizationMember){
     user.id,
     {
       userInfo: {
-        name: user.fullName ?? user.primaryEmailAddress ?? "Anonymous",
+        name: user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
         avatar: user.imageUrl,
       },
     } // Optional

@@ -60,6 +60,8 @@ import { RenameInputDialog } from "@/components/rename-alert-component";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { title } from "process";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { Avatars } from "./avatar";
+import { Inbox } from "./inbox";
 
 export const Navbar = ({docId }: any) => {
 
@@ -287,6 +289,8 @@ export const Navbar = ({docId }: any) => {
         </div>
       </div>
       <div className="flex gap-3 pl-4 items-center">
+        <Avatars/>
+        <Inbox/>
         <OrganizationSwitcher
           afterCreateOrganizationUrl={"/"}
           afterLeaveOrganizationUrl="/"

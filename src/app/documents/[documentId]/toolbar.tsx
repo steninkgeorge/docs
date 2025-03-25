@@ -101,7 +101,6 @@ const FontSizeButton=()=>{
   const [isEditing, setIsEditing] = useState(false);
   const [prevSelection, setPrevSelection] = useState<any>(null);
 
-  console.log(input)
  const  handleChange=(e: any)=>{
       setIsEditing(true)
       setInput(e.target.value)
@@ -421,7 +420,6 @@ const HeadingButton = () => {
             className="flex items-center hover:bg-neutral-200/80 w-full justify-center"
             style={{ fontSize: fontSize }}
             onClick={() => {
-              console.log(value);
               value === 0
                 ? editor?.commands.setParagraph()
                 : editor

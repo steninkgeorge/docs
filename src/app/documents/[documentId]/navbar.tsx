@@ -63,11 +63,15 @@ import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { Avatars } from "./avatar";
 import { Inbox } from "./inbox";
 
-export const Navbar = ({docId }: any) => {
+export type NavbarProps={
+  id: Id<'documents'>,
+  title: string
+}
+
+export const Navbar = ({id , title }:NavbarProps ) => {
 
 
   const { editor } = useEditorStore();
-  const { title , setTitle} = titleStore()
   
   const [input , setInput] = useState(title)
 
@@ -97,7 +101,6 @@ export const Navbar = ({docId }: any) => {
         DownloadUtils.downloadHTML(editor, title);
         break;
       default:
-        console.error("Unsupported file type");
     }
   };
 
@@ -112,7 +115,7 @@ export const Navbar = ({docId }: any) => {
         </Link>
 
         <div className="flex flex-col">
-          <DocumentInput docId={docId} />
+          <DocumentInput id={id} title={title}/>
           <div className="flex ">
             <Menubar className="p-0 h-auto bg-transparent shadow-none border-none">
               <MenubarMenu>
@@ -155,7 +158,7 @@ export const Navbar = ({docId }: any) => {
                   </MenubarItem>
                   <MenubarSeparator />
 
-                  <RenameInputDialog id={docId}>
+                  <RenameInputDialog id={id} title={title}>
                     <MenubarItem
                       onSelect={(e) => e.preventDefault()}
                       onClick={(e) => e.stopPropagation()}

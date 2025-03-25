@@ -1,13 +1,27 @@
 "use client";
 
+import { useMutation, useStorage } from "@liveblocks/react";
 import { useState, useEffect } from "react";
 import { FaCaretDown } from "react-icons/fa";
 
 export const Ruler = () => {
-  const [leftPosition, setLeftPosition] = useState(56);
-  const [rightPosition, setRightPosition] = useState(56);
+
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
+
+  const leftMargin = useStorage((root)=> root.leftMargin) ?? 56 
+  const rightMargin = useStorage((root)=>root.rightMargin) ?? 56
+
+  const setLeftPosition =useMutation(({storage}, position:number )=>{
+    storage.set('leftMargin',position)
+  },[])
+
+    const setRightPosition = useMutation(
+      ({ storage }, position:number) => {
+        storage.set("rightMargin", position);
+      },
+      []
+    );
 
   const handleMouseDownLeft = () => {
     setIsDraggingLeft(true);
@@ -18,7 +32,6 @@ export const Ruler = () => {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    console.log("mouse move");
     if (isDraggingLeft || isDraggingRight) {
       const rulerContainer = document.getElementById("ruler-container");
       if (!rulerContainer) return;
@@ -29,10 +42,10 @@ export const Ruler = () => {
 
       if (isDraggingLeft) {
         // For left marker: position directly corresponds to the cursor position
-        // But constrained between 0 and (816 - rightPosition - 20)
-        const maxLeftPosition = 816 - rightPosition - 20;
+        // But constrained between 0 and (816 - rightMargin - 20)
+        const maxLeftPosition = 816 - rightMargin - 200;
         const newLeftPosition = Math.max(
-          0,
+          10,
           Math.min(maxLeftPosition, cursorPosition)
         );
         setLeftPosition(newLeftPosition);
@@ -43,8 +56,8 @@ export const Ruler = () => {
         // Right position is measured from the right edge
         const rightSidePosition = 816 - cursorPosition;
 
-        // Constrain between 0 and (816 - leftPosition - 20)
-        const maxRightPosition = 816 - leftPosition - 20;
+        // Constrain between 0 and (816 - leftMargin - 20)
+        const maxRightPosition = 816 - leftMargin - 200;
 
         const newRightPosition = Math.max(
           0,
@@ -63,7 +76,6 @@ export const Ruler = () => {
   // useEffect to handle event listeners
   useEffect(() => {
     if (isDraggingLeft || isDraggingRight) {
-      console.log("dragging");
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
     }
@@ -86,14 +98,14 @@ export const Ruler = () => {
         className="relative max-w-[816px] h-full w-full mx-auto select-none"
       >
         <Marker
-          position={leftPosition}
+          position={leftMargin}
           isLeft={true}
           isDragging={isDraggingLeft}
           onMouseDown={handleMouseDownLeft}
           onDoubleClick={() => {}}
         />
         <Marker
-          position={rightPosition}
+          position={rightMargin}
           isLeft={false}
           isDragging={isDraggingRight}
           onMouseDown={handleMouseDownRight}

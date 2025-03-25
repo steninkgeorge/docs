@@ -1,4 +1,3 @@
-
 import { Editor } from "./editor";
 import { Ruler } from "./ruler";
 import { Toolbar } from "./toolbar";
@@ -9,6 +8,9 @@ import { api } from "../../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import titleStore from "@/store/title-store";
 import { Room } from "./Room";
+import { Document } from "./document";
+import { preloadQuery } from "convex/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 
 interface DocumentIdProps{
@@ -19,20 +21,16 @@ const DocumentPage =async ({ params }: DocumentIdProps) => {
     const doc = await params
     const documentId= doc.documentId
 
-  
+    const {getToken} = await auth()
+    const token = getToken({template:'convex'}) ?? undefined
+
+    if(!token){
+      throw new Error('Unauthorized')
+    }
+    const preloadedDocument= await preloadQuery(api.document.getDocument, {id: documentId})
+
   return (
-        <Room >
-    <div className="min-h-screen bg-[#FAFBFD]">
-      <div className="fixed flex flex-col bg-[#FAFBFD] px-4 pt-2 gap-y-2 top-0  left-0 right-0 z-10 print:hidden">
-        <Navbar docId={documentId} />
-        <Toolbar />
-        <Ruler />
-      </div>
-      <div className=" pt-[112px] print:hidden">
-          <Editor documentId={documentId} />
-      </div>
-    </div>
-        </Room>
+<Document preloadedDocument={preloadedDocument}/>
   );
 };
 

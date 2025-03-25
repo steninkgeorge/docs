@@ -20,7 +20,6 @@ export const Avatars = () => {
 const AvatarStack = () => {
   const users = useOthers();
   const currentUser = useSelf();
-console.log('users', users)
 
     
   return (
@@ -33,15 +32,15 @@ console.log('users', users)
         )}
 
         <div className="flex">
-          {users!==null &&  users.map(({ connectionId, info }) => {
-            
-            return (
-              <Avatar key={connectionId} name={info.name} src={info.avatar} />
-            );
-          })}
+          {users !== null &&
+            users.map(({ connectionId, info }) => {
+              return (
+                <Avatar key={connectionId} name={info.name} src={info.avatar} />
+              );
+            })}
         </div>
       </div>
-      <Separator orientation="vertical" />
+      <Separator orientation="vertical" className="h-6" />
     </>
   );
 };

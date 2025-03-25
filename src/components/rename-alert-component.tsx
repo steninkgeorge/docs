@@ -1,7 +1,3 @@
-
-
-
-
 import { PenIcon } from "lucide-react";
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import React, { useState } from "react";
@@ -19,22 +15,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import titleStore from "@/store/title-store";
-import { error } from "console";
 import { toast } from "sonner";
 
 interface RenameInputDialogProps {
   children: React.ReactNode;
-  id: Id<'documents'>
+  id: Id<"documents">;
+  title:string;
 }
 
-export function RenameInputDialog({
-  children,
-  id
-}: RenameInputDialogProps) {
-  const {title, setTitle}= titleStore()
-  const [input, setInput] = useState(
-    title
-  );
+export function RenameInputDialog({ children, id, title }: RenameInputDialogProps) {
+  const [input, setInput] = useState(title);
   const [open, setOpen] = useState(false);
   const renameDocument = useMutation(api.document.renameDocument);
 
@@ -42,18 +32,23 @@ export function RenameInputDialog({
     setInput(e.target.value);
   };
 
-    const handleSubmit = async (e: any) => {
-      e.preventDefault()
-      
+  const handleSubmit = (
+    e:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
 
-      try {
-        await renameDocument({ id: id, title: input }).catch((error)=>toast.error(error)).then(()=>toast.success('file renamed')).finally(()=>{setTitle(input);
-        setOpen(false);})
-        
-      } catch (error) {
-        console.log(`Error:${error}`);
-      }
-    };
+    try {
+      renameDocument({ id: id, title: input.trim() })
+        .catch((error) => toast.error(error))
+        .then(() => toast.success("file renamed"))
+        .finally(() => {
+          setOpen(false);
+        });
+    } catch (error) {
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -68,7 +63,11 @@ export function RenameInputDialog({
             Enter a new name for your document.
           </DialogDescription>
         </DialogHeader>
-        <form  >
+        <form
+          onSubmit={(e) => {
+            handleSubmit(e)
+          }}
+        >
           <Input
             placeholder="give a title"
             value={input}
@@ -84,10 +83,11 @@ export function RenameInputDialog({
           >
             Cancel
           </Button>
-          <Button type="button" onClick={(e)=>handleSubmit(e)}>Save</Button>
+          <Button type="button" onClick={(e) => handleSubmit(e)}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
-

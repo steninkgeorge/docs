@@ -51,7 +51,13 @@ export const get = query({
 export const getDocument = query({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const doc = await ctx.db.get(args.id);
+    if(!doc){
+      throw new ConvexError('Invalid Document')
+    }
+
+
+    return doc 
   },
 });
 
@@ -162,4 +168,5 @@ export const getByIds= query({args:{ids: v.array(v.id('documents'))}, handler:as
   
 
 }})
+
 

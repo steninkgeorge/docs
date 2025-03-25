@@ -42,7 +42,6 @@ export function RemoveDocumentDialog({
       .then(()=>toast.success('file removed'))
       .finally(()=>setOpen(false))
     } catch (error) {
-      console.log(`Error:${error}`);
     }
   };
 

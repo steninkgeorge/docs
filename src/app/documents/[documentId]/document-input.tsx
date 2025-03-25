@@ -1,48 +1,96 @@
-import {BsCloudCheck} from 'react-icons/bs'
+'use client'
+
+import { BsCloudCheck, BsCloudSlash } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
-import titleStore from '@/store/title-store';
-import { useMutation } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
-import { FormEvent, useEffect } from 'react';
+import titleStore from "@/store/title-store";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
+import { NavbarProps } from "./navbar";
+import { useDebounce } from "@/hooks/use-debounce";
+import { toast } from "sonner";
+import { useStatus } from "@liveblocks/react";
+import { stat } from "fs";
+import { Loader2Icon, LoaderIcon } from "lucide-react";
+
+export const DocumentInput = ({ id, title }: NavbarProps) => {
+  const mutate = useMutation(api.document.renameDocument);
+  const [input, setInput] = useState(title);
+  const [isError, setError] = useState(false);
+  const [isEditing, setEditing] = useState(false);
+  const [isPending, setPending] = useState(false);
+const status = useStatus()
+  const inpRef = useRef<HTMLInputElement>(null);
+  const showError = status ==='disconnected'
+  const showLoader = status==='connecting' || status==='reconnecting' || isPending
+
+  const debouncedUpdate = useDebounce((newValue: string) => {
+    if (newValue === title) {
+      return;
+    }
+
+    setPending(true);
+    mutate({ id: id, title: newValue })
+      .then(() => toast.success("file rename successful"))
+      .catch(() => toast.error("file rename failed"))
+      .finally(() => setPending(false));
+  });
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInput(newValue);
+    debouncedUpdate(newValue);
+  };
+
+  const handelSubmit = ((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    setPending(true);
+    mutate({ id: id, title: input })
+      .then(() => { 
+        toast.success("file rename successful")
+      setEditing(false)})
+      .catch(() => toast.error("file rename failed"))
+      .finally(() => setPending(false));
+  });
+
+  useEffect(() => {
+    setInput(title);
+  }, [title]);
 
 
-
-export const DocumentInput = ({docId}: any)=>{
-
-     const { title, setTitle } = titleStore();
-  const renameDocument = useMutation(api.document.renameDocument);
-
-     const handleChange = (e:any) => {
-       setTitle(e.target.value);
-     };
-
-    
-     const handleSubmit = async (
-       e: FormEvent<HTMLFormElement>, 
-      title: string
-       
-     ) => {
-       e.preventDefault();
-       try {
-         await renameDocument({ id: docId, title: title }).then(()=>setTitle(title))
-       } catch (error) {
-         console.log(`Error:${error}`);
-       }
-     };
-
-    
-
-    return (
-      <div className="flex items-center gap-2 ">
-        <form onBlur={(e)=>handleSubmit(e, title)} >
-          <Input
-            className=" border-none text-2xl font-semibold"
-            value={title}
-            onChange={handleChange}
+  return (
+    <div className="flex items-center gap-2 ">
+      {isEditing ? (
+        <form onSubmit={handelSubmit} className="w-fit relative max-w-[50ch]">
+          <span className="invisible whitespace-pre px-1.5 text-lg">
+            {input || ""}
+          </span>
+          <input
+            ref={inpRef}
+            onBlur={() => setEditing(false)}
+            value={input}
+            onChange={onChange}
+            className="absolute inset-0 px-1.5 truncate bg-transparent text-black text-lg"
           />
         </form>
+      ) : (
+        <span
+          onClick={() => {
+            setEditing(true);
+            setTimeout(() => {
+              inpRef.current?.focus();
+            }, 0);
+          }}
+          className="text-lg truncate cursor-pointer px-1.5"
+        >
+          {title}
+        </span>
+      )}
 
-        <BsCloudCheck className=" w-5 h-5 text-neutral-500" />
-      </div>
-    );
-}
+     {!showError && !showLoader && <BsCloudCheck/>}
+     {showError && <BsCloudSlash/>}
+     {showLoader && <Loader2Icon className="size-4 animate-spin"/>}
+    </div>
+  );
+};

@@ -69,7 +69,7 @@ useEffect(()=>{
         return users.filter((user)=> user.name.toLowerCase().includes(text.toLowerCase())).map((user)=>user.id)
       }}
     >
-      <RoomProvider id={params.documentId as string}>
+      <RoomProvider id={params.documentId as string} initialStorage={{leftMargin:56, rightMargin:56}}>
         <ClientSideSuspense fallback={<FullScreenLoader label="Loading Document"/>}>
           {children}
         </ClientSideSuspense>

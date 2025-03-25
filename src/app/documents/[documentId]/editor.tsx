@@ -46,6 +46,7 @@ import titleStore from "@/store/title-store";
    FloatingToolbar,
  } from "@liveblocks/react-tiptap";
 import { Threads } from "@/app/Threads";
+import { useStorage } from "@liveblocks/react";
 
 
 const lowlight = createLowlight(all);
@@ -62,13 +63,13 @@ lowlight.register("python", python);
 
 export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
   const { setEditor } = useEditorStore();
+  const leftMargin= useStorage((root)=>root.leftMargin)
+    const rightMargin = useStorage((root) => root.rightMargin);
 
 
   const document = useQuery(api.document.getDocument, { id: documentId });
 
-  if (document?.initialContent) {
-    console.log(JSON.parse(document.initialContent));
-  }
+  
   const liveblocks = useLiveblocksExtension();
 
   const editor = useEditor({
@@ -110,7 +111,7 @@ export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
 
     editorProps: {
       attributes: {
-        style: `padding-left: 56px; padding-right:56px`,
+        style: `padding-left: ${leftMargin ?? 56}px; padding-right:${rightMargin ?? 56}px;`,
         class:
           "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pb-10 pr-14 cursor-text",
       },

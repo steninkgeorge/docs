@@ -18,29 +18,33 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { AlertDescription } from "./ui/alert";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface RenameInputDialogProps {
-  document: Doc<"documents">;
+  Id: Id<"documents">;
   children: React.ReactNode;
 }
 
 export function RemoveDocumentDialog({
-  document,
+  Id,
   children,
 }: RenameInputDialogProps) {
 
     const [open, setOpen] = useState(false);
   const deleteDocument = useMutation(api.document.deleteDocument);
+const router = useRouter()
 
-
-  const handleDelete = async (
+  const handleDelete =  (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.stopPropagation();
     try {
-      await deleteDocument({ id: document._id }).catch((error)=>toast.error(error))
-      .then(()=>toast.success('file removed'))
-      .finally(()=>setOpen(false))
+       deleteDocument({ id:Id }).catch((error)=>toast.error(error))
+      .then(()=>{toast.success('file removed')
+        
+      })
+      router.replace("/");
+     
     } catch (error) {
     }
   };

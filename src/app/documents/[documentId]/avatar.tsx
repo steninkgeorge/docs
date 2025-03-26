@@ -6,6 +6,8 @@ import {
   useOthers,
   useSelf,
 } from "@liveblocks/react/suspense";
+import { auth } from "@clerk/nextjs/server";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const SIZE = 36;
 
@@ -20,27 +22,34 @@ export const Avatars = () => {
 const AvatarStack = () => {
   const users = useOthers();
   const currentUser = useSelf();
-
-    
+  
+  console.log(users.length)
+  
   return (
     <>
-      <div className="flex items-center">
-        {currentUser && (
-          <div className="relative ml-2">
-            <Avatar src={currentUser.info.avatar} name={"You"} />
-          </div>
-        )}
+      {
+       users.length>=1 &&  (<>
+          <div className="flex items-center">
+            <div className="relative ml-2">
+              <Avatar src={currentUser.info.avatar} name={"You"} />
+            </div>
 
-        <div className="flex">
-          {users !== null &&
-            users.map(({ connectionId, info }) => {
-              return (
-                <Avatar key={connectionId} name={info.name} src={info.avatar} />
-              );
-            })}
-        </div>
-      </div>
-      <Separator orientation="vertical" className="h-6" />
+            <div className="flex">
+              {users !== null &&
+                users.map(({ connectionId, info }) => {
+                  return (
+                    <Avatar
+                      key={connectionId}
+                      name={info.name}
+                      src={info.avatar}
+                    />
+                  );
+                })}
+            </div>
+          </div>
+          <Separator orientation="vertical" className="h-6" />
+        </>)
+      }
     </>
   );
 };

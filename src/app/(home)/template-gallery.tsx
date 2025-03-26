@@ -9,11 +9,13 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useDocument } from "@/constants/new-document-handler";
+import { Id } from "../../../convex/_generated/dataModel";
 
 
 export const TemplateGallery=()=>{
     const [isCreating , setIsCreating]= useState(false)
-    
+    const documentHandler=useDocument()
     const router = useRouter();
     const create= useMutation(api.document.create)
 
@@ -51,8 +53,12 @@ export const TemplateGallery=()=>{
                     )}
                   >
                     <Card
-                      onClick={() =>
-                        handleClick({ title: label, initialContent: "" })
+                      onClick={() =>{documentHandler
+                        .createDocument({ initialContent: "" })
+                        .then((id: Id<"documents">) =>
+                          router.replace(`/documents/${id}`)
+                        );}
+                       
                       }
                       className="border border-transparent hover:border-blue-500 transition-colors cursor-pointer"
                     >

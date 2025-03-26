@@ -16,6 +16,7 @@ import {
   Building2Icon,
   BuildingIcon,
   CircleUserIcon,
+  Loader2Icon,
   LoaderIcon,
   MoreVertical,
   PersonStandingIcon,
@@ -91,7 +92,7 @@ export const DocumentsTable = ({documents,isLoading,  status, loadMore}: Documen
             <TableRow>
               <TableCell colSpan={4} className="text-center h-24">
                 <div className="flex flex-col items-center justify-center h-full gap-2">
-                  <LoaderIcon className="size-6 text-muted-foreground animate-spin" />
+                  <Loader2Icon className="size-6 text-muted-foreground animate-spin" />
                   <span className="text-sm text-muted-foreground">
                     Loading...
                   </span>

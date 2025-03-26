@@ -62,6 +62,9 @@ import { title } from "process";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { Avatars } from "./avatar";
 import { Inbox } from "./inbox";
+import {  useDocument } from "@/constants/new-document-handler";
+import { useRouter } from "next/navigation";
+import { RemoveDocumentDialog } from "@/components/remove-alert-component";
 
 export type NavbarProps={
   id: Id<'documents'>,
@@ -72,13 +75,17 @@ export const Navbar = ({id , title }:NavbarProps ) => {
 
 
   const { editor } = useEditorStore();
-  
+  const documentHandler= useDocument()
   const [input , setInput] = useState(title)
 
   const insertToTable=({row, col}: {row: number, col: number})=>{
     editor?.chain().focus().insertTable({rows: row,cols:col}).run()
   }
 
+  const router =useRouter()
+
+
+  
 
   const handleDownload = async (type: string) => {
     if (!editor) return; // Ensure the editor is initialized
@@ -115,7 +122,7 @@ export const Navbar = ({id , title }:NavbarProps ) => {
         </Link>
 
         <div className="flex flex-col">
-          <DocumentInput id={id} title={title}/>
+          <DocumentInput id={id} title={title} />
           <div className="flex ">
             <Menubar className="p-0 h-auto bg-transparent shadow-none border-none">
               <MenubarMenu>
@@ -152,7 +159,15 @@ export const Navbar = ({id , title }:NavbarProps ) => {
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
-                  <MenubarItem>
+                  <MenubarItem
+                    onClick={() => {
+                      documentHandler
+                        .createDocument({ initialContent: "" })
+                        .then((id: Id<"documents">) =>
+                          router.replace(`/documents/${id}`)
+                        );
+                    }}
+                  >
                     <FilePlus2Icon className="mr-2 size-4" />
                     New Document <MenubarShortcut>⌘N</MenubarShortcut>
                   </MenubarItem>
@@ -168,10 +183,15 @@ export const Navbar = ({id , title }:NavbarProps ) => {
                     </MenubarItem>
                   </RenameInputDialog>
 
-                  <MenubarItem>
-                    <TrashIcon className="mr-2 size-4" />
-                    Remove <MenubarShortcut>⌘D</MenubarShortcut>
-                  </MenubarItem>
+                  <RemoveDocumentDialog Id={id}>
+                    <MenubarItem
+                      onSelect={(e) => e.preventDefault()}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <TrashIcon className="mr-2 size-4" />
+                      Remove <MenubarShortcut>⌘D</MenubarShortcut>
+                    </MenubarItem>
+                  </RemoveDocumentDialog>
                   <MenubarSeparator />
 
                   <MenubarItem onClick={() => window.print()}>
@@ -292,8 +312,8 @@ export const Navbar = ({id , title }:NavbarProps ) => {
         </div>
       </div>
       <div className="flex gap-3 pl-4 items-center">
-        <Avatars/>
-        <Inbox/>
+        <Avatars />
+        <Inbox />
         <OrganizationSwitcher
           afterCreateOrganizationUrl={"/"}
           afterLeaveOrganizationUrl="/"

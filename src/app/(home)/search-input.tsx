@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { query } from "../../../convex/_generated/server";
 import { api } from "../../../convex/_generated/api";
 import { usePaginatedQuery } from "convex/react";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export const SearchInput = () => {
 
@@ -15,29 +16,28 @@ export const SearchInput = () => {
     const [search , setSearch ]= useSearchParam('search')
     const [value , setValue ]=useState(search)
 
+    const debounce = useDebounce((search: string)=>{
+          setSearch(search);
+    })
 
-     useEffect(() => {
-       // You can add debounce here if needed
-       setSearch(value);
-     }, [value, setSearch]);
-  
-     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value)
+      const v = e.target.value  
+      setValue(v)
+        debounce(v)
     }
 
     const handleClear = (e: any)=>{
         setValue('')
-        
+        debounce('')
         inputref.current?.blur()
     }
 
-    
 
     return (
       <div className="flex-1 flex items-center justify-center">
         <form className="max-w-[720px] relative w-full" >
           <Input
+          ref={inputref}
           value={value}
             onChange={handleChange}
             placeholder="search"

@@ -34,13 +34,14 @@ export const get = query({
     if(organizationId){
           return await ctx.db
             .query("documents")
-            .withIndex("by_organization_id", (q) => q.eq('organizationId', organizationId))
+            .withIndex("by_organization_id", (q) => q.eq('organizationId', organizationId)).order('desc')
             .paginate(paginationOpts);
 
     }
 
 
-    return await ctx.db.query("documents").withIndex('by_owner_id', (q)=>q.eq('ownerId' , identity.subject)).paginate(paginationOpts);
+    return await ctx.db.query("documents").withIndex('by_owner_id', (q)=>q.eq('ownerId' , identity.subject)).order('desc')
+    .paginate(paginationOpts);
 
     // do something with `tasks`
   },

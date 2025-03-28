@@ -2,6 +2,7 @@ import { Liveblocks } from "@liveblocks/node";
 import {auth , currentUser} from '@clerk/nextjs/server'
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../convex/_generated/api";
+import { getColorFromId } from "@/constants/get-color";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
 
@@ -46,12 +47,14 @@ if(!isOwner && !isOrganizationMember){
 
 }
   // Start an auth session inside your endpoint
+  const color = getColorFromId(user.id)
   const session = liveblocks.prepareSession(
     user.id,
     {
       userInfo: {
         name: user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
         avatar: user.imageUrl,
+        color
       },
     } // Optional
   );

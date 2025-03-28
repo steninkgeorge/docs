@@ -1,8 +1,7 @@
 'use server'
 
-import { auth, currentUser ,clerkClient} from "@clerk/nextjs/server";
+import { auth, clerkClient} from "@clerk/nextjs/server";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 
@@ -24,7 +23,8 @@ const response= await clerk.users.getUserList({  organizationId: [sessionClaims?
 const users = response.data.map((user)=>({
     id:user.id,
     name:user.fullName ?? user.primaryEmailAddress?.emailAddress ?? 'Anonymous',
-    avatar: user.imageUrl
+    avatar: user.imageUrl,
+    
 }))
 
 return users

@@ -7,8 +7,6 @@ import { templates } from "@/constants/template";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import { useDocument } from "@/constants/new-document-handler";
 import { Id } from "../../../convex/_generated/dataModel";
 
@@ -17,18 +15,7 @@ export const TemplateGallery=()=>{
     const [isCreating , setIsCreating]= useState(false)
     const documentHandler=useDocument()
     const router = useRouter();
-    const create= useMutation(api.document.create)
 
-
-
-    const handleClick=({title , initialContent}:{title: string , initialContent: string})=>{
-        
-      setIsCreating(true)
-        create({title:title,  initialContent: initialContent}).then((documentId)=>{
-          router.push(`/documents/${documentId}`)
-        }).finally(()=>setIsCreating(false))
-        
-    }
 
     return (
       <div className="flex flex-col bg-neutral-100 max-w-screen p-2 w-full">
@@ -41,7 +28,7 @@ export const TemplateGallery=()=>{
             className="w-full max-w-screen-lg "
           >
             <CarouselContent>
-              {templates.map(({ id, label, image }) => (
+              {templates.map(({ id, label, image, content }) => (
                 <CarouselItem
                   key={id}
                   className="w-full sm:basis-1/2 md:basis-1/4 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
@@ -53,11 +40,13 @@ export const TemplateGallery=()=>{
                     )}
                   >
                     <Card
-                      onClick={() =>{documentHandler
-                        .createDocument({ initialContent: "" })
+                      onClick={() =>{
+                        setIsCreating(true)
+                        documentHandler
+                        .createDocument({title:label, initialContent: content})
                         .then((id: Id<"documents">) =>
-                          router.replace(`/documents/${id}`)
-                        );}
+                          router.push(`/documents/${id}`)
+                        ).finally(()=>setIsCreating(false))}
                        
                       }
                       className="border border-transparent hover:border-blue-500 transition-colors cursor-pointer"

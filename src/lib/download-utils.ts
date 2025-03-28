@@ -46,7 +46,7 @@ class DownloadUtils {
     const json = JSON.stringify(content, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     this.downloadFile(blob, `${title}.json`);
-  };
+  }
 
   static downloadHTML(editor: Editor | null , title : string){
     if (!editor) return;
@@ -73,7 +73,7 @@ class DownloadUtils {
     `;
     const blob = new Blob([htmlDocument], { type: "text/html" });
     this.downloadFile(blob, `${title}.html`);
-  };
+  }
 }
 
 export default DownloadUtils;

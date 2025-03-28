@@ -1,5 +1,4 @@
-import { PenIcon } from "lucide-react";
-import { Doc, Id } from "../../convex/_generated/dataModel";
+import { Id } from "../../convex/_generated/dataModel";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -14,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import titleStore from "@/store/title-store";
 import { toast } from "sonner";
 
 interface RenameInputDialogProps {
@@ -47,6 +45,8 @@ export function RenameInputDialog({ children, id, title }: RenameInputDialogProp
           setOpen(false);
         });
     } catch (error) {
+            toast.error(`${error}`);
+
     }
   };
 

@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
 import {
-  ActivityIcon,
   AlignCenterIcon,
   AlignJustifyIcon,
   AlignLeftIcon,
@@ -12,31 +11,22 @@ import {
   BoldIcon,
   ChevronDownIcon,
   HighlighterIcon,
-  Icon,
   Image,
   ItalicIcon,
   Link,
   Link2Icon,
   List,
-  ListCollapse,
   ListCollapseIcon,
   ListOrdered,
   ListTodoIcon,
   LucideIcon,
-  MessageSquareCodeIcon,
-  MessageSquareDashed,
-  MessageSquareIcon,
-  MessageSquarePlus,
   MessageSquarePlusIcon,
-  Minus,
   MinusIcon,
   PlusIcon,
   PrinterIcon,
   Redo2Icon,
-  RemoveFormatting,
   RemoveFormattingIcon,
   Search,
-  SpellCheck,
   SpellCheckIcon,
   UnderlineIcon,
   Undo2Icon,
@@ -46,18 +36,14 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Level } from "@tiptap/extension-heading";
 import React, { useCallback, useEffect, useState } from "react";
-import Highlight from "@tiptap/extension-highlight";
-import { CirclePicker, SketchPicker, type ColorResult } from "react-color";
-import { isActive, useEditor } from "@tiptap/react";
-import { Dropdown } from "react-day-picker";
+import { SketchPicker, type ColorResult } from "react-color";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -70,6 +56,7 @@ interface ToolBarIconProps {
   onClick?: () => void;
   isActive?: boolean;
   icon: LucideIcon;
+  label: string
 }
 
 type ToolbarItemType = {
@@ -79,17 +66,22 @@ type ToolbarItemType = {
   isActive?: boolean;
 }[][];
 
-const ToolBarButton = ({ onClick, isActive, icon: Icon }: ToolBarIconProps) => {
+const ToolBarButton = ({ onClick, isActive, icon: Icon , label}: ToolBarIconProps) => {
   return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm  hover:bg-neutral-300/20",
-        isActive && "bg-neutral-300/20"
-      )}
-    >
-      <Icon className="size-4" />
-    </button>
+    <div className="relative group">
+      <button
+        onClick={onClick}
+        className={cn(
+          "relative text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300/20",
+          isActive && "bg-neutral-300/20"
+        )}
+      >
+        <Icon className="size-4" />
+      </button>
+      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+        {label}
+      </span>
+    </div>
   );
 };
 
@@ -99,12 +91,11 @@ const FontSizeButton=()=>{
   const [input, setInput] = useState(defaultFontSize);
   const [lastValidInput, setLastValidInput]= useState(defaultFontSize)
   const [isEditing, setIsEditing] = useState(false);
-  const [prevSelection, setPrevSelection] = useState<any>(null);
 
- const  handleChange=(e: any)=>{
-      setIsEditing(true)
-      setInput(e.target.value)
-  }
+ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   setIsEditing(true);
+   setInput(e.target.value);
+ };
 
   const handleIncrement=()=>{
        setInput((prev) => {
@@ -150,10 +141,7 @@ const FontSizeButton=()=>{
     };
   },[input , editor , lastValidInput])
 
-    const handleFocus = () => {
-      if (!editor) return;
-      setPrevSelection(editor.state.selection); // Store selection before input is focused
-    };
+   
 
   const handleBlur = ()=>{
         if (!editor) return;
@@ -171,9 +159,7 @@ const FontSizeButton=()=>{
     }else{
         setInput(lastValidInput); 
     }
-     if (prevSelection) {
-       editor.commands.setTextSelection(prevSelection); // Restore selection
-     }
+     
   }
 
   return (
@@ -219,29 +205,35 @@ const LineHeightButton = () => {
 
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
-          <button>
-            <ListCollapseIcon className="w-4 h-4" />
-          </button>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {lineHeightOptions.map(({ label, value }) => (
-          <button
-            key={label}
-            className={cn(
-              "hover:bg-neutral-200/80 p-2 rounded-sm",
-              editor?.getAttributes('paragraph').lineHeight === value && "bg-neutral-200/80"
-            )}
-            onClick={() => handleAlignment(value)}
-          >
-            {label}
-          </button>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="group relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+            <button>
+              <ListCollapseIcon className="w-4 h-4" />
+            </button>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {lineHeightOptions.map(({ label, value }) => (
+            <button
+              key={label}
+              className={cn(
+                "hover:bg-neutral-200/80 p-2 rounded-sm",
+                editor?.getAttributes("paragraph").lineHeight === value &&
+                  "bg-neutral-200/80"
+              )}
+              onClick={() => handleAlignment(value)}
+            >
+              {label}
+            </button>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+        {'line height'}
+      </span>
+    </div>
   );
 };
 
@@ -253,16 +245,21 @@ const TextColorButton = () => {
     editor?.chain().focus().setColor(value.hex).run();
   };
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-300/20 items-center justify-center">
-          <button>A</button>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <SketchPicker onChange={onChange} />
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="group relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-300/20 items-center justify-center">
+            <button>A</button>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <SketchPicker onChange={onChange} />
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+        {'color'}
+      </span>
+    </div>
   );
 };
 
@@ -284,50 +281,55 @@ const Imagebutton=()=>{
   }
 
   return (
-    <Popover>
-      <PopoverTrigger className="hover:bg-neutral-300/20">
-        <Image className="w-5 h-5" />
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="flex flex-col w-full">
-          <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
-            <Upload className="w-4 h-4" />
-            <p>upload from computer</p>
+    <div className="group relative flex items-center justify-center space-x-1 ">
+      <Popover>
+        <PopoverTrigger className="hover:bg-neutral-300/20">
+          <Image className="w-5 h-5" />
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="flex flex-col w-full">
+            <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
+              <Upload className="w-4 h-4" />
+              <p>upload from computer</p>
+            </div>
+            <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
+              <Search className="w-4 h-4" />
+              <p>search from google</p>
+            </div>
+            <div
+              onClick={() => setDialogOpen(true)}
+              className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2"
+            >
+              <Link className="w-4 h-4" />
+              <p>insert link</p>
+            </div>
           </div>
-          <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
-            <Search className="w-4 h-4" />
-            <p>search from google</p>
-          </div>
-          <div
-            onClick={() => setDialogOpen(true)}
-            className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2"
-          >
-            <Link className="w-4 h-4" />
-            <p>insert link</p>
-          </div>
-        </div>
-      </PopoverContent>
+        </PopoverContent>
 
-      <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Insert Image Link</DialogTitle>
-            <DialogDescription>
-              Enter the image URL below to insert it.
-            </DialogDescription>
-          </DialogHeader>
-          <Input
-            type="text"
-            placeholder="Paste image link here..."
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-          />
-          <Button onClick={()=>handleInsertLink()} className="mt-2">
-            Insert
-          </Button>
-        </DialogContent>
-      </Dialog>
-    </Popover>
+        <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Insert Image Link</DialogTitle>
+              <DialogDescription>
+                Enter the image URL below to insert it.
+              </DialogDescription>
+            </DialogHeader>
+            <Input
+              type="text"
+              placeholder="Paste image link here..."
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+            <Button onClick={() => handleInsertLink()} className="mt-2">
+              Insert
+            </Button>
+          </DialogContent>
+        </Dialog>
+      </Popover>
+      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+        {"image"}
+      </span>
+    </div>
   );
 }
 
@@ -354,29 +356,34 @@ const AlignmentButton= ()=>{
   const IconComponent = activeIcon?.icon || AlignLeftIcon; 
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
-          <button>
-            <IconComponent className="w-4 h-4"/>
-          </button>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {icons.map(({ label, icon: Icon }) => (
-          <button
-            key={label}
-            className={cn(
-              "hover:bg-neutral-200/80 p-2 rounded-sm",
-              editor?.isActive({ textAlign: label }) && "bg-neutral-200/80"
-            )}
-            onClick={() => handleAlignment(label)}
-          >
-            <Icon className="w-4 h-4" />
-          </button>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="group relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+            <button>
+              <IconComponent className="w-4 h-4" />
+            </button>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {icons.map(({ label, icon: Icon }) => (
+            <button
+              key={label}
+              className={cn(
+                "hover:bg-neutral-200/80 p-2 rounded-sm",
+                editor?.isActive({ textAlign: label }) && "bg-neutral-200/80"
+              )}
+              onClick={() => handleAlignment(label)}
+            >
+              <Icon className="w-4 h-4" />
+            </button>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+        {"align"}
+      </span>
+    </div>
   );
 }
 
@@ -387,6 +394,7 @@ const HeadingButton = () => {
 
   const { editor } = useEditorStore();
 
+  const [open , setOpen]=useState(false)
   const heading = [
     { label: "Normal", value: 0, fontSize: "16px" },
     { label: "Heading 1", value: 1, fontSize: "32px" },
@@ -406,7 +414,7 @@ const HeadingButton = () => {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button className="h-7 w-28 text-sm flex items-center p-2 rounded-sm hover:bg-neutral-200/80 flex-shrink-0">
           <span className="truncate flex-1">{getButtonLabel()}</span>
@@ -417,16 +425,19 @@ const HeadingButton = () => {
         {heading.map(({ label, value, fontSize }) => (
           <button
             key={label}
-            className="flex items-center hover:bg-neutral-200/80 w-full justify-center"
+            className="flex items-center hover:bg-slate-50 w-full px-2 py-1 rounded-sm font-medium justify-center"
             style={{ fontSize: fontSize }}
             onClick={() => {
               value === 0
-                ? editor?.commands.setParagraph()
-                : editor
+                ?()=> editor?.commands.setParagraph()
+                :()=>{ editor
                     ?.chain()
                     .focus()
                     .setHeading({ level: value as Level })
-                    .run();
+                    .run()
+                  setOpen(false)
+                  }
+
             }}
           >
             <span>{label}</span>
@@ -438,10 +449,7 @@ const HeadingButton = () => {
 };
 
 const FontFamilyButton = () => {
-  const [open, setOpen] = useState(false);
-  const handleSelect = () => {
-    setOpen(false);
-  };
+
 
   const { editor } = useEditorStore();
 
@@ -648,12 +656,13 @@ export const Toolbar = () => {
     ],
   ];
   return (
-    <div className=" top-5  px-2.5 py-0.5 rounded-[24px] min-h-[40px] overflow-x-auto flex items-center justify-center">
+    <div className=" top-5 px-2.5 py-0.5 rounded-[24px] min-h-[40px] overflow-visible flex items-center justify-center ">
       {sections.map((row, rowIndex) => (
         <div key={rowIndex} className="flex mx-2 gap-x-0.5">
           {row.map((item) => (
             <ToolBarButton
               key={item.label}
+              label={item.label}
               icon={item.icon}
               onClick={item.onClick}
               isActive={item.isActive}

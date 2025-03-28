@@ -4,10 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { useSearchParam } from "@/hooks/use-search-param";
 import { SearchIcon, XIcon } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import { query } from "../../../convex/_generated/server";
-import { api } from "../../../convex/_generated/api";
-import { usePaginatedQuery } from "convex/react";
+import React, { useRef, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 
 export const SearchInput = () => {
@@ -26,7 +23,7 @@ export const SearchInput = () => {
         debounce(v)
     }
 
-    const handleClear = (e: any)=>{
+    const handleClear = ()=>{
         setValue('')
         debounce('')
         inputref.current?.blur()

@@ -21,17 +21,13 @@ import {
   CodeIcon,
   FileIcon,
   FileJson,
-  FilePen,
   FilePenIcon,
   FilePlus2Icon,
   GlobeIcon,
-  Italic,
   ItalicIcon,
   PrinterIcon,
   RedoIcon,
-  RemoveFormatting,
   RemoveFormattingIcon,
-  Strikethrough,
   StrikethroughIcon,
   TableIcon,
   TextIcon,
@@ -41,24 +37,8 @@ import {
 } from "lucide-react";
 import { BsFilePdf, BsMarkdown } from "react-icons/bs";
 import { useEditorStore } from "@/store/use-editor-store";
-import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
-import titleStore from "@/store/title-store";
 import { RenameInputDialog } from "@/components/rename-alert-component";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { title } from "process";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { Avatars } from "./avatar";
 import { Inbox } from "./inbox";
@@ -76,7 +56,6 @@ export const Navbar = ({id , title }:NavbarProps ) => {
 
   const { editor } = useEditorStore();
   const documentHandler= useDocument()
-  const [input , setInput] = useState(title)
 
   const insertToTable=({row, col}: {row: number, col: number})=>{
     editor?.chain().focus().insertTable({rows: row,cols:col}).run()

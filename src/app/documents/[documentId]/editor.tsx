@@ -27,7 +27,6 @@ import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 //custom extension
 import { FontSize } from "@/extensions/font-size";
 import { LineHeight } from "@/extensions/line-height";
-import { Ruler } from "./ruler";
 
 import javascript from "highlight.js/lib/languages/javascript";
 import typescript from "highlight.js/lib/languages/typescript";
@@ -36,11 +35,7 @@ import css from "highlight.js/lib/languages/css";
 import python from "highlight.js/lib/languages/python";
 
 import { all, createLowlight } from "lowlight";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { useEffect, useRef } from "react";
-import titleStore from "@/store/title-store";
  import {
    useLiveblocksExtension,
    FloatingToolbar,
@@ -61,28 +56,25 @@ lowlight.register("typescript", typescript);
 lowlight.register("python", python);
 
 
-export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
+
+export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initialContent?: string|undefined}) => {
   const { setEditor } = useEditorStore();
   const leftMargin= useStorage((root)=>root.leftMargin)
     const rightMargin = useStorage((root) => root.rightMargin);
 
 
-  const document = useQuery(api.document.getDocument, { id: documentId });
 
-  
-  const liveblocks = useLiveblocksExtension();
+  //TODO: add initial content 
+  const liveblocks = useLiveblocksExtension({initialContent,offlineSupport_experimental:true});
 
   const editor = useEditor({
     immediatelyRender: false,
     onCreate({ editor }) {
       setEditor(editor);
- 
     },
     onUpdate({ editor }) {
       // The content has changed.
       setEditor(editor);
-      
-     
     },
     onSelectionUpdate({ editor }) {
       // The selection has changed.
@@ -92,11 +84,11 @@ export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
       // The editor state has changed.
       setEditor(editor);
     },
-    onFocus({ editor, event }) {
+    onFocus({ editor }) {
       // The editor is focused.
       setEditor(editor);
     },
-    onBlur({ editor, event }) {
+    onBlur({ editor }) {
       // The editor isn’t focused anymore.
       setEditor(editor);
     },
@@ -229,7 +221,7 @@ export const Editor = ({documentId }:{documentId: Id<'documents'> }) => {
       Color,
       Typography,
     ],
-    content: "",
+  
   });
 
 

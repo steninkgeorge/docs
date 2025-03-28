@@ -85,7 +85,7 @@ export const Ruler = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDraggingLeft, isDraggingRight]);
+  }, [isDraggingLeft, isDraggingRight, handleMouseMove]);
 
   const marker = Array.from({ length: 83 }, (_, i) => i);
 

@@ -1,35 +1,23 @@
-import { Doc, Id } from "../../../convex/_generated/dataModel"
-import { compareAsc, format } from "date-fns";
+import { Doc } from "../../../convex/_generated/dataModel"
+import {format } from "date-fns";
 import {
-  Table,
-  TableCaption,
+ 
   TableRow,
   TableBody,
   TableCell,
-  TableHead,
-  TableFooter,
-  TableHeader,
+
 } from "@/components/ui/table";
 import { useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/navigation";
 
 import {
   Building2Icon,
-  BuildingIcon,
   CircleUserIcon,
-  DeleteIcon,
   MoreVertical,
   PenIcon,
-  PersonStandingIcon,
 } from "lucide-react";
 import {
-  BsPersonBadge,
-  BsPersonFillExclamation,
-  BsFileEarmarkText,
-  BsFile,
-  BsTrash,
-  BsX,
-  BsTrash2,
+ 
   BsTrash3,
 } from "react-icons/bs";
 
@@ -37,20 +25,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+ 
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { SiGoogledocs } from "react-icons/si";
-import { stat } from "fs";
-import { FullScreenLoader } from "@/components/full-screen-loader";
-import { Button } from "@/components/ui/button";
-import { FaDrumSteelpan, FaTrash } from "react-icons/fa";
 
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { Button } from "@/components/ui/button";
+
 import { RenameInputDialog } from "@/components/rename-alert-component";
 import { RemoveDocumentDialog } from "@/components/remove-alert-component";
 import titleStore from "@/store/title-store";
@@ -70,10 +53,13 @@ export const DocumentsRow= ({documents}:DocumentsRowProps)=>{
         setTitle(documents[index].title)
       };
 
-      const handleOpenNewTab=(docId: string, e: any)=>{
-        e.stopPropagation()
+      const handleOpenNewTab = (
+        docId: string,
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+      ) => {
+        e.stopPropagation();
         window.open(`/documents/${docId}`, "_blank", "noopener,noreferrer");
-      }
+      };
 
     
     return (
@@ -124,7 +110,7 @@ export const DocumentsRow= ({documents}:DocumentsRowProps)=>{
                     <BsBoxArrowUpRight className="size-6" />
                     Open in new tab
                   </DropdownMenuItem>
-                  <RemoveDocumentDialog document={doc}>
+                  <RemoveDocumentDialog Id={doc._id}>
                     <DropdownMenuItem
                       onSelect={(e) => e.preventDefault()}
                       onClick={(e) => e.stopPropagation()}
@@ -135,7 +121,7 @@ export const DocumentsRow= ({documents}:DocumentsRowProps)=>{
                     </DropdownMenuItem>
                   </RemoveDocumentDialog>
 
-                  <RenameInputDialog id={doc._id}>
+                  <RenameInputDialog id={doc._id} title={doc.title}>
                     <DropdownMenuItem
                       onSelect={(e) => e.preventDefault()}
                       onClick={(e) => e.stopPropagation()}

@@ -6,8 +6,6 @@ import {
   useOthers,
   useSelf,
 } from "@liveblocks/react/suspense";
-import { auth } from "@clerk/nextjs/server";
-import { useAuth, useUser } from "@clerk/nextjs";
 
 const SIZE = 36;
 

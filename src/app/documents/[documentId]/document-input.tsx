@@ -1,22 +1,18 @@
 'use client'
 
 import { BsCloudCheck, BsCloudSlash } from "react-icons/bs";
-import { Input } from "@/components/ui/input";
-import titleStore from "@/store/title-store";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavbarProps } from "./navbar";
 import { useDebounce } from "@/hooks/use-debounce";
 import { toast } from "sonner";
 import { useStatus } from "@liveblocks/react";
-import { stat } from "fs";
-import { Loader2Icon, LoaderIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 
 export const DocumentInput = ({ id, title }: NavbarProps) => {
   const mutate = useMutation(api.document.renameDocument);
   const [input, setInput] = useState(title);
-  const [isError, setError] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [isPending, setPending] = useState(false);
 const status = useStatus()
@@ -34,7 +30,7 @@ const status = useStatus()
       .then(() => toast.success("file rename successful"))
       .catch(() => toast.error("file rename failed"))
       .finally(() => setPending(false));
-  });
+  },1500);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

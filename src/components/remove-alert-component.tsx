@@ -1,19 +1,15 @@
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { PenIcon } from "lucide-react";
-import { Doc, Id } from "../../convex/_generated/dataModel";
+import { Id } from "../../convex/_generated/dataModel";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { AlertDescription } from "./ui/alert";
@@ -46,6 +42,7 @@ const router = useRouter()
       router.replace("/");
      
     } catch (error) {
+      toast.error(`${error}`)
     }
   };
 

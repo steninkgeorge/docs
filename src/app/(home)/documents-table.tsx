@@ -1,38 +1,19 @@
 import { PaginationStatus } from "convex/react"
 import { Doc } from "../../../convex/_generated/dataModel"
-import { compareAsc, format } from "date-fns";
 import {
   Table,
-  TableCaption,
   TableRow,
   TableBody,
   TableCell,
   TableHead,
-  TableFooter,
   TableHeader,
 } from "@/components/ui/table";
 
 import {
-  Building2Icon,
-  BuildingIcon,
-  CircleUserIcon,
   Loader2Icon,
   LoaderIcon,
-  MoreVertical,
-  PersonStandingIcon,
 } from "lucide-react";
-import {
-  BsPersonBadge,
-  BsPersonFillExclamation,
-  BsFileEarmarkText,
-  BsFile,
-} from "react-icons/bs";
 
-import { SiGoogledocs } from "react-icons/si";
-import { stat } from "fs";
-import { FullScreenLoader } from "@/components/full-screen-loader";
-import { Button } from "@/components/ui/button";
-import { useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/navigation";
 import { DocumentsRow } from "./document-row";
 import { useEffect, useRef } from "react";
@@ -48,13 +29,9 @@ interface DocumentsTableProps{
 
 export const DocumentsTable = ({documents,isLoading,  status, loadMore}: DocumentsTableProps) => {
      
-    const router = useRouter();
     const loaderRef= useRef(null)
     
-    const handleClick = (docId: string) => {
-       router.push(`/documents/${docId}`);
-     };
-
+    
 
     useEffect(()=>{
 
@@ -82,8 +59,8 @@ export const DocumentsTable = ({documents,isLoading,  status, loadMore}: Documen
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead>Name</TableHead>
-            <TableHead>Shared</TableHead>
+            <TableHead className="pr-20">Name</TableHead>
+            <TableHead className="px-4">Shared</TableHead>
             <TableHead>Created at</TableHead>
           </TableRow>
         </TableHeader>

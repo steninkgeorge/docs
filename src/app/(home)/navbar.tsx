@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { SearchInput } from "./search-input";
 import {OrganizationSwitcher, UserButton} from '@clerk/nextjs'
 

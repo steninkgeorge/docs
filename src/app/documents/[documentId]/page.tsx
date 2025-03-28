@@ -1,13 +1,5 @@
-import { Editor } from "./editor";
-import { Ruler } from "./ruler";
-import { Toolbar } from "./toolbar";
-import { Navbar } from "./navbar";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { query } from "../../../../convex/_generated/server";
 import { api } from "../../../../convex/_generated/api";
-import { useQuery } from "convex/react";
-import titleStore from "@/store/title-store";
-import { Room } from "./Room";
 import { Document } from "./document";
 import { preloadQuery } from "convex/nextjs";
 import { auth } from "@clerk/nextjs/server";

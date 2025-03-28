@@ -90,7 +90,7 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
       setEditor(editor);
     },
     onBlur({ editor }) {
-      // The editor isn’t focused anymore.
+      // The editor isn't focused anymore.
       setEditor(editor);
     },
     onDestroy() {
@@ -106,7 +106,7 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
       attributes: {
         style: `padding-left: ${leftMargin ?? LEFT_DEFAULT_MARGIN}px; padding-right:${rightMargin ?? RIGHT_DEFAULT_MARGIN}px;`,
         class:
-          "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pb-10 pr-14 cursor-text",
+          "focus:outline-none print:border-0 dark:bg-gunmetal-300 dark:text-gray-100 bg-white border dark:border-gunmetal-600 border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pb-10 pr-14 cursor-text",
       },
     },
 
@@ -132,7 +132,7 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
       }),
       Link.configure({
         HTMLAttributes: {
-          class: "text-blue-500 underline cursor-pointer",
+          class: "text-blue-500 dark:text-blue-400 underline cursor-pointer",
         },
         openOnClick: false,
         autolink: true,
@@ -227,7 +227,7 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
 
 
   return (
-    <div className="pt-10 size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible ">
+    <div className="pt-10 size-full overflow-x-auto bg-[#F9FBFD] dark:bg-gunmetal-400 px-4 print:p-0 print:bg-white print:overflow-visible ">
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:min-w-0">
         <EditorContent editor={editor} />
         <Threads editor={editor} />

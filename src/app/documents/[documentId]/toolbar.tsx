@@ -72,13 +72,13 @@ const ToolBarButton = ({ onClick, isActive, icon: Icon , label}: ToolBarIconProp
       <button
         onClick={onClick}
         className={cn(
-          "relative text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300/20",
-          isActive && "bg-neutral-300/20"
+          "relative text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300/20 dark:hover:bg-gunmetal-600/50",
+          isActive && "bg-neutral-300/20 dark:bg-gunmetal-600/60"
         )}
       >
         <Icon className="size-4" />
       </button>
-      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
+      <span className="absolute z-50 top-full mb-1 left-1/2 -translate-x-1/2 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition bg-gray-800 dark:bg-gunmetal-500 text-white text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap">
         {label}
       </span>
     </div>
@@ -164,19 +164,19 @@ const FontSizeButton=()=>{
 
   return (
     <div className="flex items-center justify-center gap-x-2 m-1">
-      <button onClick={handleDecrement}>
+      <button onClick={handleDecrement} className="dark:text-gray-200">
         <MinusIcon className="w-4 h-4" />
       </button>
       
         <input
-          className="max-w-8 h-6 border rounded-sm border-black  outline-none bg-transparent p-1 text-center items-center justify-center"
+          className="max-w-8 h-6 border rounded-sm border-black dark:border-gray-500 dark:text-gray-200 outline-none bg-transparent p-1 text-center items-center justify-center"
           value={input}
           onChange={(e)=>handleChange(e)}
           onBlur={handleBlur}
         ></input>
       
       
-      <button onClick={handleIncrement}>
+      <button onClick={handleIncrement} className="dark:text-gray-200">
         <PlusIcon className="w-4 h-4" />
       </button>
     </div>
@@ -208,20 +208,20 @@ const LineHeightButton = () => {
     <div className="group relative">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+          <div className="dark:hover:bg-gunmetal-600/50 flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
             <button>
               <ListCollapseIcon className="w-4 h-4" />
             </button>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="flex flex-col text-sm p-0.5">
           {lineHeightOptions.map(({ label, value }) => (
             <button
               key={label}
               className={cn(
-                "hover:bg-neutral-200/80 p-2 rounded-sm",
+                "hover:bg-neutral-200/80 p-1 rounded-sm dark:hover:bg-gunmetal-600/50",
                 editor?.getAttributes("paragraph").lineHeight === value &&
-                  "bg-neutral-200/80"
+                  "bg-neutral-200/80 dark:bg-gunmetal-600/50"
               )}
               onClick={() => handleAlignment(value)}
             >
@@ -248,7 +248,7 @@ const TextColorButton = () => {
     <div className="group relative">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-300/20 items-center justify-center">
+          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-300/20 dark:hover:bg-gunmetal-600/50 items-center justify-center">
             <button>A</button>
           </div>
         </DropdownMenuTrigger>
@@ -281,24 +281,24 @@ const Imagebutton=()=>{
   }
 
   return (
-    <div className="group relative flex items-center justify-center space-x-1 ">
+    <div className="group relative flex items-center justify-center space-x-1">
       <Popover>
-        <PopoverTrigger className="hover:bg-neutral-300/20">
+        <PopoverTrigger className="hover:bg-neutral-300/20 dark:hover:bg-gunmetal-600/50 p-1 rounded-lg flex items-center justify-center">
           <Image className="w-5 h-5" />
         </PopoverTrigger>
         <PopoverContent>
-          <div className="flex flex-col w-full">
-            <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
+          <div className="flex flex-col ">
+            <div className="flex items-center justify-start gap-x-2 hover:bg-neutral-300/20 dark:hover:bg-gunmetal-600/50 rounded-sm p-1">
               <Upload className="w-4 h-4" />
               <p>upload from computer</p>
             </div>
-            <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2">
+            <div className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 dark:hover:bg-gunmetal-600/50 rounded-sm p-1">
               <Search className="w-4 h-4" />
               <p>search from google</p>
             </div>
             <div
               onClick={() => setDialogOpen(true)}
-              className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 rounded-sm p-2"
+              className="flex items-center justify-start w-full gap-x-2 hover:bg-neutral-300/20 dark:hover:bg-gunmetal-600/50 rounded-sm p-1"
             >
               <Link className="w-4 h-4" />
               <p>insert link</p>
@@ -359,7 +359,7 @@ const AlignmentButton= ()=>{
     <div className="group relative">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center">
+          <div className="flex flex-col h-7 min-w-7 p-2 rounded-sm hover:bg-neutral-200/80 items-center justify-center dark:hover:bg-gunmetal-600/50">
             <button>
               <IconComponent className="w-4 h-4" />
             </button>
@@ -370,8 +370,8 @@ const AlignmentButton= ()=>{
             <button
               key={label}
               className={cn(
-                "hover:bg-neutral-200/80 p-2 rounded-sm",
-                editor?.isActive({ textAlign: label }) && "bg-neutral-200/80"
+                "hover:bg-neutral-200/80 p-2 rounded-sm dark:hover:bg-gunmetal-600/50",
+                editor?.isActive({ textAlign: label }) && "bg-neutral-200/80 dark:bg-gunmetal-600/50"
               )}
               onClick={() => handleAlignment(label)}
             >
@@ -416,7 +416,7 @@ const HeadingButton = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <button className="h-7 w-28 text-sm flex items-center p-2 rounded-sm hover:bg-neutral-200/80 flex-shrink-0">
+        <button className="h-7 w-28 text-sm flex items-center p-2 rounded-sm hover:bg-neutral-200/80 dark:hover:bg-gunmetal-600/50 flex-shrink-0">
           <span className="truncate flex-1">{getButtonLabel()}</span>
           <ChevronDownIcon className=" ml-2 size-4 " />
         </button>
@@ -425,7 +425,7 @@ const HeadingButton = () => {
         {heading.map(({ label, value, fontSize }) => (
           <button
             key={label}
-            className="flex items-center hover:bg-slate-50 w-full px-2 py-1 rounded-sm font-medium justify-center"
+            className="flex items-center dark:hover:bg-gunmetal-600 hover:bg-slate-50 w-full px-2 py-1 rounded-sm font-medium justify-center"
             style={{ fontSize: fontSize }}
             onClick={() => {
               value === 0
@@ -464,7 +464,7 @@ const FontFamilyButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="h-7 text-sm w-[120px] hover:bg-neutral-200/80 rounded-sm shrink-0 justify-between flex items-center px-2 outline-none">
+        <button className="h-7 text-sm w-[120px] hover:bg-neutral-200/80 dark:hover:bg-gunmetal-600/50 rounded-sm shrink-0 justify-between flex items-center px-2 outline-none">
           <span className="truncate">
             {editor?.getAttributes("textStyle").fontFamily || "Arial"}
           </span>
@@ -476,7 +476,7 @@ const FontFamilyButton = () => {
           <button
             key={value}
             className={cn(
-              "flex item-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 w-full",
+              "flex item-center gap-x-2 px-2 py-1 rounded-sm dark:hover:bg-gunmetal-600 hover:bg-neutral-200/80 w-full",
               editor?.isActive("textStyle", { fontFamily: value }) &&
                 "bg-neutral-200/80"
             )}
@@ -656,7 +656,7 @@ export const Toolbar = () => {
     ],
   ];
   return (
-    <div className=" top-5 px-2.5 py-0.5 rounded-[24px] min-h-[40px] overflow-visible flex items-center justify-center ">
+    <div className="top-5 px-2.5 py-0.5 rounded-[24px] min-h-[40px] overflow-visible flex items-center justify-center dark:bg-gunmetal-400">
       {sections.map((row, rowIndex) => (
         <div key={rowIndex} className="flex mx-2 gap-x-0.5">
           {row.map((item) => (
@@ -670,16 +670,16 @@ export const Toolbar = () => {
           ))}
           <Separator
             orientation="vertical"
-            className="mx-2 h-6 bg-neutral-300"
+            className="mx-2 h-6 bg-neutral-300 dark:bg-gunmetal-600"
           />
         </div>
       ))}
       <FontSizeButton />
-      <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300" />
+      <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300 dark:bg-gunmetal-600" />
 
       <FontFamilyButton />
 
-      <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300" />
+      <Separator orientation="vertical" className="mx-2 h-6 bg-neutral-300 dark:bg-gunmetal-600" />
       <HeadingButton />
       <TextColorButton />
       <AlignmentButton />

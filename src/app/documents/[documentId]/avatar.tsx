@@ -61,7 +61,7 @@ export const Avatar = ({ name, src }: AvatarProps) => {
   return (
     <div
       style={{ width: SIZE, height: SIZE }}
-      className=" realtive -ml-2 group border-4 bg-gray-400 border-white flex rounded-full shrink-0 place-content-center"
+      className=" realtive -ml-2 group border-4 dark:bg-gunmetal-500 dark:border-gunmetal-400 bg-gray-400 border-white flex rounded-full shrink-0 place-content-center"
     >
       <div className="absolute opacity-0 group-hover:opacity-100 text-white bg-black rounded-lg top-1 text-xs mt-2.5 whitespace-nowrap px-2 py-1 z-10 transition-opacity ">
         {name}

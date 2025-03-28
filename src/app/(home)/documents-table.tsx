@@ -58,19 +58,19 @@ export const DocumentsTable = ({documents,isLoading,  status, loadMore}: Documen
     <div className="max-w-screen-xl mx-auto px-14 py-6 flex flex-col gap-5 h-full">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead className="pr-20">Name</TableHead>
-            <TableHead className="px-4">Shared</TableHead>
-            <TableHead>Created at</TableHead>
+          <TableRow className="hover:bg-transparent dark:border-gunmetal-600">
+            <TableHead className="pr-20 dark:text-gray-300">Name</TableHead>
+            <TableHead className="px-4 dark:text-gray-300">Shared</TableHead>
+            <TableHead className="dark:text-gray-300">Created at</TableHead>
           </TableRow>
         </TableHeader>
         {documents === undefined || isLoading ? (
           <TableBody>
-            <TableRow>
-              <TableCell colSpan={4} className="text-center h-24">
+            <TableRow className="dark:border-gunmetal-600">
+              <TableCell colSpan={4} className="text-center h-24 dark:border-gunmetal-600">
                 <div className="flex flex-col items-center justify-center h-full gap-2">
-                  <Loader2Icon className="size-6 text-muted-foreground animate-spin" />
-                  <span className="text-sm text-muted-foreground">
+                  <Loader2Icon className="size-6 text-muted-foreground animate-spin dark:text-gray-400" />
+                  <span className="text-sm text-muted-foreground dark:text-gray-400">
                     Loading...
                   </span>
                 </div>
@@ -79,8 +79,8 @@ export const DocumentsTable = ({documents,isLoading,  status, loadMore}: Documen
           </TableBody>
         ) : documents.length === 0 ? (
           <TableBody>
-            <TableRow>
-              <TableCell>No document available, Try creating One</TableCell>
+            <TableRow className="dark:border-gunmetal-600">
+              <TableCell className="dark:text-gray-400 dark:border-gunmetal-600">No document available, Try creating One</TableCell>
             </TableRow>
           </TableBody>
         ) : (
@@ -91,7 +91,7 @@ export const DocumentsTable = ({documents,isLoading,  status, loadMore}: Documen
       {status === "CanLoadMore" &&
         (isLoading ? (
           <div className="flex justify-center">
-            <LoaderIcon className="size-6 text-muted-foreground animate-spin" />
+            <LoaderIcon className="size-6 text-muted-foreground animate-spin dark:text-gray-400" />
           </div>
         ) : (
           <div ref={loaderRef} className="h-8" />

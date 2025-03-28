@@ -34,29 +34,29 @@ export const SearchInput = () => {
       <div className="flex-1 flex items-center justify-center">
         <form className="max-w-[720px] relative w-full" >
           <Input
-          ref={inputref}
-          value={value}
+            ref={inputref}
+            value={value}
             onChange={handleChange}
-            placeholder="search"
-            className="md:text-base px-14 w-full  rounded-full focus-visible:ring-0 focus:bg-white bg-neutral-100"
+            placeholder="Search"
+            className="md:text-base px-14 w-full rounded-full focus-visible:ring-0 focus:bg-white dark:focus:bg-gunmetal-300 bg-neutral-100 dark:bg-gunmetal-500 dark:text-gray-100 dark:placeholder:text-gray-400"
           />
           <Button
-            className="absolute hover:bg-transparent left-3 top-1/2 -translate-y-1/2"
+            className="absolute hover:bg-transparent left-3 top-1/2 -translate-y-1/2 dark:text-gray-300"
             type="submit"
             variant={"ghost"}
             size={"icon"}
           >
-            <SearchIcon />
+            <SearchIcon className="h-5 w-5" />
           </Button>
           {value && (
             <Button
-              className="absolute right-3 top-1/2 -translate-y-1/2 "
+              className="absolute right-3 top-1/2 -translate-y-1/2 dark:text-gray-300"
               type="submit"
               variant={"ghost"}
               size={"icon"}
               onClick={handleClear}
             >
-              <XIcon />
+              <XIcon className="h-5 w-5" />
             </Button>
           )}
         </form>

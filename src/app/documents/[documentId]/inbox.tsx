@@ -47,11 +47,11 @@ const InboxMenu= ()=>{
             <Button variant={"ghost"} size={"icon"} className="relative ">
               <BellIcon className="size-4 " />
 
-              <div className=" absolute bg-sky-400 w-4 h-4 flex items-center justify-center rounded-full top-0 right-0 transform translate-x-1 -translate-y-1 ">
+              {inboxNotifications.length > 0 && <div className=" absolute bg-sky-400 w-4 h-4 flex items-center justify-center rounded-full top-0 right-0 transform translate-x-1 -translate-y-1 ">
                 <p className="text-[8px] text-white text-center">
                   {inboxNotifications.length}
                 </p>
-              </div>
+              </div>}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-auto " align="end">

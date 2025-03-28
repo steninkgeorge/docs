@@ -56,10 +56,10 @@ const status = useStatus()
 
 
   return (
-    <div className="flex items-center gap-2 ">
+    <div className="flex items-center gap-2">
       {isEditing ? (
         <form onSubmit={handelSubmit} className="w-fit relative max-w-[50ch]">
-          <span className="invisible whitespace-pre px-1.5 text-lg">
+          <span className="invisible whitespace-pre px-1.5 text-lg dark:text-gray-200">
             {input || ""}
           </span>
           <input
@@ -67,7 +67,7 @@ const status = useStatus()
             onBlur={() => setEditing(false)}
             value={input}
             onChange={onChange}
-            className="absolute inset-0 px-1.5 truncate bg-transparent text-black text-lg"
+            className="absolute inset-0 px-1.5 truncate bg-transparent text-black dark:text-gray-200 text-lg"
           />
         </form>
       ) : (
@@ -78,15 +78,15 @@ const status = useStatus()
               inpRef.current?.focus();
             }, 0);
           }}
-          className="text-lg truncate cursor-pointer px-1.5"
+          className="text-lg truncate cursor-pointer px-1.5 dark:text-gray-200"
         >
           {title}
         </span>
       )}
 
-     {!showError && !showLoader && <BsCloudCheck/>}
-     {showError && <BsCloudSlash/>}
-     {showLoader && <Loader2Icon className="size-4 animate-spin"/>}
+     {!showError && !showLoader && <BsCloudCheck className="dark:text-gray-300"/>}
+     {showError && <BsCloudSlash className="dark:text-gray-300"/>}
+     {showLoader && <Loader2Icon className="size-4 animate-spin dark:text-gray-300"/>}
     </div>
   );
 };

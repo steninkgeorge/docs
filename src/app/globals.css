@@ -43,38 +43,111 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Dim Gray */
+    --dim-gray-default: 72, 72, 6c;
+    --dim-gray-100: 17, 17, 16;
+    --dim-gray-200: 2e, 2e, 2c;
+    --dim-gray-300: 45, 45, 41;
+    --dim-gray-400: 5c, 5c, 57;
+    --dim-gray-500: 72, 72, 6c;
+    --dim-gray-600: 90, 90, 89;
+    --dim-gray-700: ac, ac, a7;
+    --dim-gray-800: c8, c8, c4;
+    --dim-gray-900: e3, e3, e2;
+    
+    /* Davy's Gray */
+    --davys-gray-default: 4e, 53, 52;
+    --davys-gray-100: 10, 11, 11;
+    --davys-gray-200: 20, 22, 21;
+    --davys-gray-300: 2f, 32, 32;
+    --davys-gray-400: 3f, 43, 42;
+    --davys-gray-500: 4e, 53, 52;
+    --davys-gray-600: 71, 78, 76;
+    --davys-gray-700: 94, 9a, 99;
+    --davys-gray-800: b8, bc, bb;
+    --davys-gray-900: db, dd, dd;
+    
+    /* Outer Space */
+    --outer-space-default: 3a, 43, 45;
+    --outer-space-100: 0c, 0d, 0e;
+    --outer-space-200: 17, 1b, 1c;
+    --outer-space-300: 23, 28, 2a;
+    --outer-space-400: 2e, 36, 38;
+    --outer-space-500: 3a, 43, 45;
+    --outer-space-600: 5d, 6c, 6f;
+    --outer-space-700: 82, 93, 97;
+    --outer-space-800: ac, b7, b9;
+    --outer-space-900: d5, db, dc;
+    
+    /* Onyx */
+    --onyx-default: 38, 3b, 39;
+    --onyx-100: 0b, 0c, 0c;
+    --onyx-200: 17, 18, 17;
+    --onyx-300: 22, 24, 23;
+    --onyx-400: 2e, 30, 2e;
+    --onyx-500: 38, 3b, 39;
+    --onyx-600: 5f, 65, 61;
+    --onyx-700: 86, 8d, 88;
+    --onyx-800: ae, b3, b0;
+    --onyx-900: d7, d9, d7;
+    
+    /* Gunmetal */
+    --gunmetal-default: 25, 2b, 2e;
+    --gunmetal-100: 07, 08, 09;
+    --gunmetal-200: 0f, 11, 12;
+    --gunmetal-300: 16, 19, 1b;
+    --gunmetal-400: 1d, 22, 24;
+    --gunmetal-500: 25, 2b, 2e;
+    --gunmetal-600: 4a, 57, 5d;
+    --gunmetal-700: 71, 83, 8c;
+    --gunmetal-800: a0, ac, b3;
+    --gunmetal-900: cf, d6, d9;
+    
+    /* Using the dark theme palette - refined for better contrast */
+    --background: 200 15% 9%; /* Gunmetal 200 - Darker for main background */
+    --foreground: 60 10% 95%; /* Almost white text for best readability */
+    
+    --card: 200 15% 12%; /* Gunmetal 300 - Card slightly lighter than background */
+    --card-foreground: 60 10% 95%; /* Same bright text */
+    
+    --popover: 200 15% 14%; /* Gunmetal 400 - Popover slightly lighter than cards */
+    --popover-foreground: 60 10% 95%; /* Consistent text */
+    
+    --primary: 60 10% 95%; /* Light text color for primary elements */
+    --primary-foreground: 200 15% 12%; /* Dark background for primary buttons */
+    
+    --secondary: 200 15% 16%; /* Onyx 300 - Lighter than background for secondary elements */
+    --secondary-foreground: 60 10% 90%; /* Slightly dimmer than primary text */
+    
+    --muted: 200 10% 20%; /* Slightly lighter than background for muted elements */
+    --muted-foreground: 60 5% 65%; /* Davy's Gray 700 - Dimmer text for less important elements */
+    
+    --accent: 200 15% 18%; /* Slightly lighter than muted for accent elements */
+    --accent-foreground: 60 10% 95%; /* Bright text on accent */
+    
+    --destructive: 0 62.8% 30.6%; /* Original destructive */
+    --destructive-foreground: 60 10% 95%; /* Bright text on destructive */
+    
+    --border: 200 15% 25%; /* Outer Space 300 - Visible but not stark borders */
+    --input: 200 15% 16%; /* Outer Space 300 - Input backgrounds */
+    --ring: 60 10% 50%; /* More visible focus rings */
+    
+    /* Chart colors with better visibility in dark mode */
+    --chart-1: 210 70% 60%;
+    --chart-2: 160 60% 55%;
+    --chart-3: 30 80% 65%;
+    --chart-4: 280 65% 70%;
+    --chart-5: 340 75% 65%;
+    
+    /* Sidebar needs to be distinct from main content area */
+    --sidebar-background: 210 15% 14%; /* Darker than content area */
+    --sidebar-foreground: 60 10% 95%; /* Bright text */
+    --sidebar-primary: 210 12% 70%; /* Visible primary elements */
+    --sidebar-primary-foreground: 210 15% 14%; /* Dark text on primary elements */
+    --sidebar-accent: 210 12% 25%; /* Subtle accent */
+    --sidebar-accent-foreground: 60 10% 95%; /* Bright text on accent */
+    --sidebar-border: 210 15% 25%; /* Subtle borders */
+    --sidebar-ring: 210 70% 50%; /* Visible focus indicators */
   }
 }
 
@@ -85,6 +158,74 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Editor specific dark mode styles */
+.dark .tiptap {
+  color: hsl(var(--foreground));
+  
+  pre {
+    background: #16191B; /* Gunmetal 300 - Darker than editor background */
+  }
+  
+  table {
+    border-color: rgba(142, 146, 150, 0.2);
+    
+    th {
+      background-color: #23282A; /* Outer Space 300 - Darker table headers */
+      color: hsl(var(--foreground));
+    }
+    
+    td, th {
+      border-color: rgba(142, 146, 150, 0.2);
+    }
+    
+    .selectedCell:after {
+      background: rgba(142, 146, 150, 0.2);
+    }
+    
+    .column-resize-handle {
+      background-color: hsl(var(--primary));
+    }
+  }
+}
+
+/* Dark mode dropdown/popover improvements */
+.dark [data-radix-popper-content-wrapper] {
+  --tooltip-background: hsl(var(--popover));
+  --tooltip-foreground: hsl(var(--popover-foreground));
+}
+
+/* Dark mode tooltip improvements */
+.dark [role="tooltip"] {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-color: hsl(var(--border));
+}
+
+/* Dark mode button hover states */
+.dark .btn-primary:hover,
+.dark button[class*="primary"]:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.dark .btn-secondary:hover,
+.dark button[class*="secondary"]:hover {
+  background-color: hsl(var(--secondary) / 0.9);
+}
+
+.dark button[class*="outline"]:hover {
+  background-color: hsl(var(--accent));
+}
+
+.dark [class*="menubar"] [class*="content"] {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark [class*="menubar"] [class*="item"]:hover {
+  background-color: hsl(var(--accent));
 }
 
 .tiptap {
@@ -355,4 +496,68 @@ body {
 
 div[data-radix-popper-content-wrapper]{
   z-index: 50 !important;
+}
+
+/* Additional dark mode styling for common components */
+.dark {
+  /* Dialog/Modal styling */
+  [role="dialog"] {
+    @apply bg-gunmetal-400 text-gray-100 border-gunmetal-600;
+  }
+  
+  /* Dropdown menus */
+  [data-radix-popper-content-wrapper] [role="menu"] {
+    @apply bg-gunmetal-400 text-gray-100 border-gunmetal-600;
+  }
+  
+  /* Button styling */
+  button, 
+  .btn {
+    @apply transition-colors;
+  }
+  
+  /* Form elements */
+  input, 
+  textarea, 
+  select {
+    @apply bg-gunmetal-300 text-gray-100 border-gunmetal-600;
+    @apply focus:border-gray-500 focus:ring-gray-500;
+    @apply placeholder:text-gray-500;
+  }
+  
+  /* Dropdown items */
+  [role="menuitem"] {
+    @apply hover:bg-gunmetal-500;
+  }
+  
+  /* Card styling */
+  .card, 
+  [class*="card"] {
+    @apply bg-gunmetal-400 border-gunmetal-600;
+  }
+  
+  /* Code blocks need more contrast in dark mode */
+  pre, 
+  code {
+    @apply bg-gunmetal-100 text-gray-100;
+  }
+  
+  /* Tooltips should be readable */
+  [role="tooltip"] {
+    @apply bg-gunmetal-500 text-gray-100 border-gunmetal-600;
+  }
+}
+
+/* TipTap specific dark mode overrides for code blocks */
+.dark .tiptap code {
+  @apply bg-gunmetal-100 text-gray-100 px-1 rounded;
+}
+
+.dark .tiptap pre {
+  @apply bg-gunmetal-100 text-gray-100;
+}
+
+/* Fix for dropdown menus in dark mode */
+.dark [data-radix-popper-content-wrapper] {
+  @apply shadow-lg;
 }

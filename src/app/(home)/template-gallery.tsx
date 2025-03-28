@@ -9,23 +9,32 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useDocument } from "@/constants/new-document-handler";
 import { Id } from "../../../convex/_generated/dataModel";
-
+import { useTheme } from "next-themes";
 
 export const TemplateGallery=()=>{
     const [isCreating , setIsCreating]= useState(false)
     const documentHandler=useDocument()
     const router = useRouter();
+    const { theme } = useTheme();
 
+    // Function to get dark version of image path
+    const getDarkImagePath = (imagePath: string) => {
+      if (theme === "dark") {
+        // For SVG images, append "-dark" before extension
+        return imagePath.replace(/(\.[^.]+)$/, "-dark$1");
+      }
+      return imagePath;
+    };
 
     return (
-      <div className="flex flex-col bg-neutral-100 max-w-screen p-2 w-full">
+      <div className="flex flex-col bg-neutral-100 dark:bg-gunmetal-400 max-w-screen p-2 w-full">
         <div className="mx-auto space-y-2 p-1">
-          <div className="font-medium px-3">Start with a template</div>
+          <div className="font-medium px-3 dark:text-gray-200">Start with a template</div>
           <Carousel
             opts={{
               align: "start",
             }}
-            className="w-full max-w-screen-lg "
+            className="w-full max-w-screen-lg"
           >
             <CarouselContent>
               {templates.map(({ id, label, image, content }) => (
@@ -49,13 +58,13 @@ export const TemplateGallery=()=>{
                         ).finally(()=>setIsCreating(false))}
                        
                       }
-                      className="border border-transparent hover:border-blue-500 transition-colors cursor-pointer"
+                      className="border hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer dark:bg-gunmetal-300 overflow-hidden h-full"
                     >
-                      <CardContent className="flex aspect-[3/4] items-center justify-center p-6">
-                        <div className="flex  items-center justify-center space-y-3">
+                      <CardContent className="flex aspect-[3/4] items-center justify-center p-0 h-full">
+                        <div className="flex items-center justify-center w-full h-full">
                           <div className="w-full h-full">
                             <Image
-                              src={image}
+                              src={getDarkImagePath(image)}
                               alt={label}
                               width={100}
                               height={100}
@@ -65,15 +74,15 @@ export const TemplateGallery=()=>{
                         </div>
                       </CardContent>
                     </Card>
-                    <div className="text-sm font-medium truncate p-1 translate-x-1">
+                    <div className="text-sm font-medium truncate p-1 translate-x-1 dark:text-gray-200">
                       {label}
                     </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="dark:bg-gunmetal-500 dark:hover:bg-gunmetal-600 dark:border-gunmetal-600" />
+            <CarouselNext className="dark:bg-gunmetal-500 dark:hover:bg-gunmetal-600 dark:border-gunmetal-600" />
           </Carousel>
         </div>
       </div>

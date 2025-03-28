@@ -92,7 +92,7 @@ export const Ruler = () => {
 
   return (
     <div
-      className={`  h-6 flex items-end border-gray-300 border-b print:hidden `}
+      className="h-6 flex items-end border-gray-300 dark:border-gray-700 border-b print:hidden"
     >
       <div
         id="ruler-container"
@@ -124,17 +124,17 @@ export const Ruler = () => {
                 >
                   {marker % 10 === 0 && (
                     <>
-                      <div className="h-2 w-[1px] bg-neutral-500 absolute bottom-0 " />
-                      <span className="absolute bottom-2 text-[10px] text-neutral-500 -translate-x-1/2">
+                      <div className="h-2 w-[1px] bg-neutral-500 dark:bg-neutral-400 absolute bottom-0" />
+                      <span className="absolute bottom-2 text-[10px] text-neutral-500 dark:text-neutral-400 -translate-x-1/2">
                         {marker / 10 + 1}
                       </span>
                     </>
                   )}
                   {marker % 5 === 0 && marker % 10 !== 0 && (
-                    <div className="h-1.5 w-[1px] bg-neutral-500 absolute bottom-0" />
+                    <div className="h-1.5 w-[1px] bg-neutral-500 dark:bg-neutral-400 absolute bottom-0" />
                   )}
                   {marker % 5 !== 0 && (
-                    <div className="h-1 w-[1px] bg-neutral-300 absolute bottom-0" />
+                    <div className="h-1 w-[1px] bg-neutral-300 dark:bg-neutral-600 absolute bottom-0" />
                   )}
                 </div>
               );
@@ -163,12 +163,12 @@ const Marker = ({
 }: MarkerProps) => {
   return (
     <div
-      className=" absolute top-0 z-[5] w-4 cursor-ew-resize group -ml-2 "
+      className="absolute top-0 z-[5] w-4 cursor-ew-resize group -ml-2"
       style={{ [isLeft ? "left" : "right"]: `${position}px` }}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
     >
-      <FaCaretDown className=" fill-blue-500  top-0 h-full  left-1/2 transform -translate-x-1/2 " />
+      <FaCaretDown className="fill-blue-500 dark:fill-blue-400 top-0 h-full left-1/2 transform -translate-x-1/2" />
       <div
         className="absolute -translate-x-1/2 top-4 transform select-none"
         style={{
@@ -178,7 +178,6 @@ const Marker = ({
           transform:'scaleX(0.5)',
           display: isDragging? 'inline-block': 'none',
           userSelect:'none'
-          
         }}
       ></div>
     </div>

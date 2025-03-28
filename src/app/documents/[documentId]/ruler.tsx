@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_PAGE_WIDTH, LEFT_DEFAULT_MARGIN, RIGHT_DEFAULT_MARGIN } from "@/constants/margin";
 import { useMutation, useStorage } from "@liveblocks/react";
 import { useState, useEffect } from "react";
 import { FaCaretDown } from "react-icons/fa";
@@ -9,8 +10,8 @@ export const Ruler = () => {
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
 
-  const leftMargin = useStorage((root)=> root.leftMargin) ?? 56 
-  const rightMargin = useStorage((root)=>root.rightMargin) ?? 56
+  const leftMargin = useStorage((root)=> root.leftMargin) ?? LEFT_DEFAULT_MARGIN 
+  const rightMargin = useStorage((root)=>root.rightMargin) ?? RIGHT_DEFAULT_MARGIN
 
   const setLeftPosition =useMutation(({storage}, position:number )=>{
     storage.set('leftMargin',position)
@@ -43,7 +44,7 @@ export const Ruler = () => {
       if (isDraggingLeft) {
         // For left marker: position directly corresponds to the cursor position
         // But constrained between 0 and (816 - rightMargin - 20)
-        const maxLeftPosition = 816 - rightMargin - 200;
+        const maxLeftPosition = DEFAULT_PAGE_WIDTH - rightMargin - 200;
         const newLeftPosition = Math.max(
           10,
           Math.min(maxLeftPosition, cursorPosition)
@@ -54,10 +55,10 @@ export const Ruler = () => {
       if (isDraggingRight) {
         // For right marker: we need to convert cursor position to right-side position
         // Right position is measured from the right edge
-        const rightSidePosition = 816 - cursorPosition;
+        const rightSidePosition = DEFAULT_PAGE_WIDTH - cursorPosition;
 
         // Constrain between 0 and (816 - leftMargin - 20)
-        const maxRightPosition = 816 - leftMargin - 200;
+        const maxRightPosition = DEFAULT_PAGE_WIDTH - leftMargin - 200;
 
         const newRightPosition = Math.max(
           0,
@@ -114,7 +115,7 @@ export const Ruler = () => {
         <div className="absolute inset-x-0 bottom-0 h-full">
           <div className="relative h-full w-[816px]">
             {marker.map((marker) => {
-              const pos = (816 * marker) / 82;
+              const pos = (DEFAULT_PAGE_WIDTH * marker) / 82;
               return (
                 <div
                   key={marker}

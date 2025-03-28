@@ -1,0 +1,5 @@
+export const LEFT_DEFAULT_MARGIN=56
+export const RIGHT_DEFAULT_MARGIN=56
+
+export const DEFAULT_PAGE_WIDTH=816
+export const DEFAULT_PAGE_HEIGHT=1054

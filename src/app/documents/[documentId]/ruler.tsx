@@ -92,7 +92,7 @@ export const Ruler = () => {
 
   return (
     <div
-      className="h-6 flex items-end border-gray-300 dark:border-gray-700 border-b print:hidden"
+      className="h-6 mt-2 flex items-end border-gray-300 dark:border-gray-700 border-b print:hidden"
     >
       <div
         id="ruler-container"

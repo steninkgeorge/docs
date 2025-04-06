@@ -31,7 +31,8 @@ import {
   UnderlineIcon,
   Undo2Icon,
   Upload,
-  
+  IndentIcon,
+  OutdentIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -428,15 +429,19 @@ const HeadingButton = () => {
             className="flex items-center dark:hover:bg-gunmetal-600 hover:bg-slate-50 w-full px-2 py-1 rounded-sm font-medium justify-center"
             style={{ fontSize: fontSize }}
             onClick={() => {
-              value === 0
-                ?()=> editor?.commands.setParagraph()
-                :()=>{ editor
-                    ?.chain()
-                    .focus()
-                    .setHeading({ level: value as Level })
-                    .run()
-                  setOpen(false)
-                  }
+              if (value === 0) {
+                editor?.chain().focus().setParagraph().run();
+                editor?.chain().focus().setFontSize("16px").run(); // Reset font size for normal text
+              } else {
+                editor
+                  ?.chain()
+                  .focus()
+                  .setHeading({ level: value as Level })
+                  .run();
+                editor?.chain().focus().setFontSize(fontSize).run(); // Set font size for heading
+              }
+              setOpen(false);
+                  
 
             }}
           >
@@ -492,6 +497,7 @@ const FontFamilyButton = () => {
     </DropdownMenu>
   );
 };
+
 
 export const Toolbar = () => {
   const { editor } = useEditorStore();

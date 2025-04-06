@@ -21,7 +21,6 @@ const AvatarStack = () => {
   const users = useOthers();
   const currentUser = useSelf();
   
-  console.log(users.length)
   
   return (
     <>

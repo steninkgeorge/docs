@@ -27,6 +27,7 @@ import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 //custom extension
 import { FontSize } from "@/extensions/font-size";
 import { LineHeight } from "@/extensions/line-height";
+import { Tab } from "@/extensions/indent-extension";
 
 import javascript from "highlight.js/lib/languages/javascript";
 import typescript from "highlight.js/lib/languages/typescript";
@@ -116,9 +117,12 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
       OrderedList,
       Underline,
       liveblocks,
+
       TaskList,
       LineHeight,
       TextStyle,
+
+      Tab,
       CodeBlockLowlight.configure({
         lowlight,
       }),
@@ -132,25 +136,24 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
       }),
       Link.configure({
         HTMLAttributes: {
+          target: '_blank',
+          rel: 'noopener noreferrer',
           class: "text-blue-500 dark:text-blue-400 underline cursor-pointer",
         },
-        openOnClick: false,
+        openOnClick: true,
         autolink: true,
         defaultProtocol: "https",
         protocols: ["http", "https"],
         isAllowedUri: (url, ctx) => {
           try {
-            // construct URL
             const parsedUrl = url.includes(":")
               ? new URL(url)
               : new URL(`${ctx.defaultProtocol}://${url}`);
 
-            // use default validation
             if (!ctx.defaultValidate(parsedUrl.href)) {
               return false;
             }
 
-            // disallowed protocols
             const disallowedProtocols = ["ftp", "file", "mailto"];
             const protocol = parsedUrl.protocol.replace(":", "");
 
@@ -158,7 +161,6 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
               return false;
             }
 
-            // only allow protocols specified in ctx.protocols
             const allowedProtocols = ctx.protocols.map((p) =>
               typeof p === "string" ? p : p.scheme
             );
@@ -167,7 +169,6 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
               return false;
             }
 
-            // disallowed domains
             const disallowedDomains = [
               "example-phishing.com",
               "malicious-site.net",
@@ -178,7 +179,6 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
               return false;
             }
 
-            // all checks have passed
             return true;
           } catch {
             return false;
@@ -186,12 +186,10 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
         },
         shouldAutoLink: (url) => {
           try {
-            // construct URL
             const parsedUrl = url.includes(":")
               ? new URL(url)
               : new URL(`https://${url}`);
 
-            // only auto-link if the domain is not in the disallowed list
             const disallowedDomains = [
               "example-no-autolink.com",
               "another-no-autolink.com",
@@ -222,7 +220,6 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
       Color,
       Typography,
     ],
-  
   });
 
 
@@ -230,6 +227,7 @@ export const Editor = ({initialContent  }:{documentId: Id<'documents'> , initial
     <div className="pt-10 size-full overflow-x-auto bg-[#F9FBFD] dark:bg-gunmetal-400 px-4 print:p-0 print:bg-white print:overflow-visible ">
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:min-w-0">
         <EditorContent editor={editor} />
+
         <Threads editor={editor} />
         <FloatingToolbar editor={editor} />
       </div>

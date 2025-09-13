@@ -10,7 +10,7 @@ This project is a collaborative document editor inspired by Google Docs. It prov
 - **Rich Text Editing**: Basic formatting tools such as bold, italic, underline, lists, and headings.
 - **Document Management**: Create, edit, save, and organize documents in your workspace.
 
-## Demo / Preview
+## Demo 
 
 You can view a demo of the project here:  
 <video src="https://github.com/user-attachments/assets/05c97867-7a53-4c31-859e-d3d9fafb24a2" controls width="600"></video>

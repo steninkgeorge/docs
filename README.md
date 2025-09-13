@@ -13,7 +13,7 @@ This project is a collaborative document editor inspired by Google Docs. It prov
 ## Demo / Preview
 
 You can view a demo of the project here:  
-[Demo Video](https://github.com/user-attachments/assets/05c97867-7a53-4c31-859e-d3d9fafb24a2)
+<video src="https://github.com/user-attachments/assets/05c97867-7a53-4c31-859e-d3d9fafb24a2" controls width="600"></video>
 
 ## Installation
 

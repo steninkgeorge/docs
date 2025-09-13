@@ -9,7 +9,6 @@ This project is a collaborative document editor inspired by Google Docs. It prov
 - **Organization / Group Management**: Create and manage workspaces for teams or organizations.
 - **Rich Text Editing**: Basic formatting tools such as bold, italic, underline, lists, and headings.
 - **Document Management**: Create, edit, save, and organize documents in your workspace.
-- **Sharing & Permissions**: Share documents with individuals or groups with role-based permissions.
 
 ## Demo / Preview
 
